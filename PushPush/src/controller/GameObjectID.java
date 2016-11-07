@@ -1,7 +1,7 @@
 package controller;
 
 public enum GameObjectID {
-	EMPTY(0), WALL(9), PLAYER1(1), BALL(2),TARGET(3);
+	EMPTY(0), WALL(9), PLAYER1(1), BALL(2),TARGET(3), FILLEDTARGET(5);
 	public int ID;
 
 	GameObjectID(int a) {

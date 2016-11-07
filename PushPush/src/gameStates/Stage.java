@@ -53,18 +53,6 @@ public abstract class Stage extends BasicGameState {
 					Image img=objs.get(map[i][j]).getImage();
 					img.draw(((float)j*20)+10, ((float)i*20)+5);
 				}
-				/*
-				switch (value) {
-				case PLAYER1:
-					g.drawImage(p, ((float)j*20)+10, ((float)i*20)+5);
-					break;
-				case WALL:
-					g.drawImage(a, ((float)j*20)+10, ((float)i*20)+5);
-					break;
-				default:
-					break;
-				}
-				*/
 			}
 		}
 	}
@@ -72,7 +60,7 @@ public abstract class Stage extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException {
 		// TODO Auto-generated method stub
-		if ( cnt==1) {
+		if ( cnt==3) {
 			game.enterState(GameStateID.TITLE.ID);
 		}
 	}
@@ -89,7 +77,13 @@ public abstract class Stage extends BasicGameState {
 			if (collision == GameObjectID.EMPTY.ID)
 				playerPosX--;
 			else if (collision == GameObjectID.BALL.ID) {
-				if (map[playerPosY][playerPosX-2] == GameObjectID.EMPTY.ID ){
+				int colisionWithBall= map[playerPosY][playerPosX-2];
+				if (colisionWithBall == GameObjectID.EMPTY.ID ){
+					playerPosX--;
+					map[playerPosY][playerPosX-1]+=collision;
+				}
+				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
+					cnt++;
 					playerPosX--;
 					map[playerPosY][playerPosX-1]+=collision;
 				}
@@ -100,7 +94,13 @@ public abstract class Stage extends BasicGameState {
 			if (collision == GameObjectID.EMPTY.ID)
 				playerPosX++;
 			else if (collision == GameObjectID.BALL.ID) {
-				if (map[playerPosY][playerPosX+2] == GameObjectID.EMPTY.ID ){
+				int colisionWithBall= map[playerPosY][playerPosX+2];
+				if (colisionWithBall == GameObjectID.EMPTY.ID ){
+					playerPosX++;
+					map[playerPosY][playerPosX+1]+=collision;
+				}
+				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
+					cnt++;
 					playerPosX++;
 					map[playerPosY][playerPosX+1]+=collision;
 				}
@@ -111,7 +111,13 @@ public abstract class Stage extends BasicGameState {
 			if (collision == GameObjectID.EMPTY.ID)
 				playerPosY--;
 			else if (collision == GameObjectID.BALL.ID) {
-				if (map[playerPosY-2][playerPosX] == GameObjectID.EMPTY.ID ){
+				int colisionWithBall= map[playerPosY-2][playerPosX];
+				if (colisionWithBall == GameObjectID.EMPTY.ID ){
+					playerPosY--;
+					map[playerPosY-1][playerPosX]+=collision;
+				}
+				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
+					cnt++;
 					playerPosY--;
 					map[playerPosY-1][playerPosX]+=collision;
 				}
