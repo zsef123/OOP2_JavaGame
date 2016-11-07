@@ -2,14 +2,17 @@ package models;
 
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Shape;
 
 abstract public class GameObject {
 	protected BasicGame scene;
+	protected Shape rect;
 	public float posX,posY;
 	// use name on Unity
 	// tag means type of gameobjcet( like a player, just wall , unmoveable ,... etc)
 	protected int tag;
 	protected String name;
+	
 	
 	public GameObject(BasicGame nowScene,int tag, String name) {
 		this.scene=nowScene;
