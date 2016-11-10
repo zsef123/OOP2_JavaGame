@@ -41,7 +41,8 @@ public class Stage3 extends Stage {
 		mapInit();
 	}
 
-	public void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException {
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		time+=delta;
 		if ( cnt== maxCnt && cnt > 0 ) {
 			game.enterState(GameStateID.ENDING.ID);
 		}

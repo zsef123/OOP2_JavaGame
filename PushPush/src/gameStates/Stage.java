@@ -24,7 +24,7 @@ public abstract class Stage extends BasicGameState {
 	protected HashMap<Integer,GameObject> objs;
 	protected String fileDir="C:\\javaProject\\JavaModels\\Stages\\";
 	// 그려줄 맵
-
+	protected int time;
 	protected int cnt;
 	protected int maxCnt;
 	protected int playerPosX;
@@ -79,6 +79,7 @@ public abstract class Stage extends BasicGameState {
 		// TODO Auto-generated method stub
 		//해상도로 바꾼다
 		bgImage.draw(0,0,640,480);
+		g.drawString("Time : " + time/1000, 450, 50);
 		for (int i=0;i<mapWidth; i++) {
 			for( int j=0; j<mapHeight; j++) {
 				GameObjectID value=GameObjectID.fromInt(map[i][j]);

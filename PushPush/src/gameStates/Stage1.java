@@ -22,6 +22,7 @@ public class Stage1 extends Stage {
 	// init은 main에서 한번만 불린다 state의 전환과 무관하다.
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		this.game=sbg;
+		this.time=0;
 		// TODO Auto-generated method stub
 		bgImage=new Image("C:\\javaProject\\JavaModels\\Game_Background_Image.png");
 		objs=new HashMap<Integer,GameObject>();
@@ -35,7 +36,9 @@ public class Stage1 extends Stage {
 		
 		mapInit();
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException {
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		time+=delta;
+		
 		if ( cnt== maxCnt && cnt > 0 ) {
 			game.enterState(2);
 		}
