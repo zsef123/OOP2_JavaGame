@@ -4,18 +4,18 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class Wall extends GameObject {
-	private Image sprite;
-	
-	public Wall(BasicGame nowScene, int tag, String name) {
+public class TeleportOut extends GameObject {
+
+	protected Image TeleportImage;
+	public TeleportOut(BasicGame nowScene, int tag, String name) {
 		super(nowScene, tag, name);
 		// TODO Auto-generated constructor stub
 	}
 
-	public Wall(int tag, String name) throws SlickException {
+	public TeleportOut(int tag, String name) throws SlickException {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
-		sprite=new Image("C:\\javaProject\\JavaModels\\wall.png");
+		TeleportImage= new Image("C:\\javaProject\\JavaModels\\tpout.png");
 	}
 
 	@Override
@@ -24,11 +24,16 @@ public class Wall extends GameObject {
 		this.posX=x;
 		this.posY=y;
 	}
-
+	public int getX() {
+		return this.posX;
+	}
+	public int getY() {
+		return this.posX;
+	}
 	@Override
 	public Image getImage() {
 		// TODO Auto-generated method stub
-		return sprite;
+		return TeleportImage;
 	}
 
 }

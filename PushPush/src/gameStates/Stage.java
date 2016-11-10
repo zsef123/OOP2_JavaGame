@@ -21,12 +21,12 @@ public abstract class Stage extends BasicGameState {
 	protected int stageIndex;
 	protected Image bgImage;
 	protected HashMap<Integer,GameObject> objs;
+	protected String fileDir="C:\\javaProject\\JavaModels\\Stages\\";
 	// ±×·ÁÁÙ ¸Ê
 	
-	protected Image a;
-	protected Image p;
 	protected int playerPosX;
 	protected int playerPosY;
+	private int saveMapValue;
 	public int[][] map;
 	public final int mapWidth=20;
 	public final int mapHeight=15;
@@ -34,6 +34,7 @@ public abstract class Stage extends BasicGameState {
 	public Stage(int id) {
 		// TODO Auto-generated constructor stub
 		this.ID=id;
+		cnt=0;
 	}
 
 	@Override
@@ -55,93 +56,178 @@ public abstract class Stage extends BasicGameState {
 				}
 			}
 		}
+		objs.get(1).getImage().draw(playerPosX*20+10, playerPosY*20+5);
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException {
 		// TODO Auto-generated method stub
-		if ( cnt==3) {
-			game.enterState(GameStateID.TITLE.ID);
-		}
+		
 	}
 	public void keyPressed(int key, char code) {
 		System.out.println("Key:"+code+","+key);
-		playerMove(key);
+		if (key == 'r') {
+			
+		}
+		else
+			playerMove(key);
 	}
 	private void playerMove(int key) {
-		map[playerPosY][playerPosX]=0;
-		int collision;
+		//map[playerPosY][playerPosX]=0;
+		int collision=0;
+		int saveValue = map[playerPosY][playerPosX];
 		switch(key) {
 		case Input.KEY_LEFT:
 			collision = map[playerPosY][playerPosX-1];
-			if (collision == GameObjectID.EMPTY.ID)
+			if (collision == GameObjectID.EMPTY.ID || collision == GameObjectID.TARGET.ID)
 				playerPosX--;
+			else if (collision == GameObjectID.TELEPORTIN.ID ) {
+				playerPosX=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+			}
 			else if (collision == GameObjectID.BALL.ID) {
 				int colisionWithBall= map[playerPosY][playerPosX-2];
 				if (colisionWithBall == GameObjectID.EMPTY.ID ){
 					playerPosX--;
+					map[playerPosY][playerPosX]=0;
 					map[playerPosY][playerPosX-1]+=collision;
 				}
 				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
 					cnt++;
 					playerPosX--;
+					map[playerPosY][playerPosX]=0;
 					map[playerPosY][playerPosX-1]+=collision;
+				}
+			}
+			else if (collision == GameObjectID.FILLEDTARGET.ID) {
+				int colisionWithBall= map[playerPosY][playerPosX-2];
+				if (colisionWithBall == GameObjectID.EMPTY.ID ){
+					cnt--;
+					playerPosX--;
+					map[playerPosY][playerPosX]-=GameObjectID.BALL.ID;
+					map[playerPosY][playerPosX-1]+=GameObjectID.BALL.ID;
+				}
+				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
+					playerPosX--;
+					map[playerPosY][playerPosX]-=GameObjectID.BALL.ID;
+					map[playerPosY][playerPosX-1]+=GameObjectID.BALL.ID;
 				}
 			}
 			break;
 		case Input.KEY_RIGHT:
 			collision = map[playerPosY][playerPosX+1];
-			if (collision == GameObjectID.EMPTY.ID)
+			if (collision == GameObjectID.EMPTY.ID || collision == GameObjectID.TARGET.ID)
 				playerPosX++;
+			else if (collision == GameObjectID.TELEPORTIN.ID ) {
+				playerPosX=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+			}
 			else if (collision == GameObjectID.BALL.ID) {
 				int colisionWithBall= map[playerPosY][playerPosX+2];
 				if (colisionWithBall == GameObjectID.EMPTY.ID ){
 					playerPosX++;
+					map[playerPosY][playerPosX]=0;
 					map[playerPosY][playerPosX+1]+=collision;
 				}
 				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
 					cnt++;
 					playerPosX++;
+					map[playerPosY][playerPosX]=0;
 					map[playerPosY][playerPosX+1]+=collision;
+				}
+			}
+			else if (collision == GameObjectID.FILLEDTARGET.ID) {
+				int colisionWithBall= map[playerPosY][playerPosX+2];
+				if (colisionWithBall == GameObjectID.EMPTY.ID ){
+					cnt--;
+					playerPosX++;
+					map[playerPosY][playerPosX]-=GameObjectID.BALL.ID;
+					map[playerPosY][playerPosX+1]+=GameObjectID.BALL.ID;
+				}
+				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
+					playerPosX++;
+					map[playerPosY][playerPosX]-=GameObjectID.BALL.ID;
+					map[playerPosY][playerPosX+1]+=GameObjectID.BALL.ID;
 				}
 			}
 			break;
 		case Input.KEY_UP:
 			collision = map[playerPosY-1][playerPosX];
-			if (collision == GameObjectID.EMPTY.ID)
+			if (collision == GameObjectID.EMPTY.ID || collision == GameObjectID.TARGET.ID)
 				playerPosY--;
+			else if (collision == GameObjectID.TELEPORTIN.ID ) {
+				playerPosX=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+			}
 			else if (collision == GameObjectID.BALL.ID) {
 				int colisionWithBall= map[playerPosY-2][playerPosX];
 				if (colisionWithBall == GameObjectID.EMPTY.ID ){
 					playerPosY--;
+					map[playerPosY][playerPosX]=0;
 					map[playerPosY-1][playerPosX]+=collision;
 				}
 				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
 					cnt++;
 					playerPosY--;
+					map[playerPosY][playerPosX]=0;
 					map[playerPosY-1][playerPosX]+=collision;
+				}
+			}
+			else if (collision == GameObjectID.FILLEDTARGET.ID) {
+				int colisionWithBall= map[playerPosY-2][playerPosX];
+				if (colisionWithBall == GameObjectID.EMPTY.ID ){
+					cnt--;
+					playerPosY--;
+					map[playerPosY][playerPosX]-=GameObjectID.BALL.ID;
+					map[playerPosY-1][playerPosX]+=GameObjectID.BALL.ID;
+				}
+				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
+					playerPosY--;
+					map[playerPosY][playerPosX]-=GameObjectID.BALL.ID;
+					map[playerPosY-1][playerPosX]+=GameObjectID.BALL.ID;
 				}
 			}
 			break;
 		case Input.KEY_DOWN:
 			collision = map[playerPosY+1][playerPosX];
-			if (collision == GameObjectID.EMPTY.ID)
+			if (collision == GameObjectID.EMPTY.ID || collision == GameObjectID.TARGET.ID)
 				playerPosY++;
+			else if (collision == GameObjectID.TELEPORTIN.ID ) {
+				playerPosX=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+			}
 			else if (collision == GameObjectID.BALL.ID) {
 				int colisionWithBall= map[playerPosY+2][playerPosX];
 				if (colisionWithBall == GameObjectID.EMPTY.ID ){
 					playerPosY++;
+					map[playerPosY][playerPosX]=0;
 					map[playerPosY+1][playerPosX]+=collision;
 				}
 				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
 					cnt++;
 					playerPosY++;
+					map[playerPosY][playerPosX]=0;
 					map[playerPosY+1][playerPosX]+=collision;
+				}
+			}
+			else if (collision == GameObjectID.FILLEDTARGET.ID) {
+				int colisionWithBall= map[playerPosY+2][playerPosX];
+				if (colisionWithBall == GameObjectID.EMPTY.ID ){
+					cnt--;
+					playerPosY++;
+					map[playerPosY][playerPosX]-=GameObjectID.BALL.ID;
+					map[playerPosY+1][playerPosX]+=GameObjectID.BALL.ID;
+				}
+				else if ( colisionWithBall == GameObjectID.TARGET.ID) {
+					playerPosY++;
+					map[playerPosY][playerPosX]-=GameObjectID.BALL.ID;
+					map[playerPosY+1][playerPosX]+=GameObjectID.BALL.ID;
 				}
 			}
 			break;
 		}
-		map[playerPosY][playerPosX]=1;
+		
+		//map[playerPosY][playerPosX]=saveValue;
 	}
 	@Override
 	public int getID() {

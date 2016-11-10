@@ -22,4 +22,5 @@ public class Map1_1 extends Map {
 		node.get(0).setPos(40, 40);
 	}
 
+
 }

@@ -18,7 +18,7 @@ public class Ball extends GameObject {
 	}
 
 	@Override
-	public void setPos(float x, float y) {
+	public void setPos(int x, int y) {
 		// TODO Auto-generated method stub
 		posX=x;
 		posY=y;

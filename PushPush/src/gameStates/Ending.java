@@ -3,27 +3,25 @@ package gameStates;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import controller.GameStateID;
 
-public class Title extends BasicGameState {
+public class Ending extends BasicGameState {
 	StateBasedGame game;
 	GameContainer gc;
 	
 	private Image img;
-	// 나중에 ID는 Enum으로 관리
-	protected int ID=0;
+	protected int ID=GameStateID.ENDING.ID;
 	
-	public Title(int id) throws SlickException {
+	public Ending(int id) throws SlickException {
 		// TODO Auto-generated constructor stub
 		this.ID = id;
-		System.out.println("TITLE ID:"+ID);
+		System.out.println("ENDING ID:"+ID);
 		// change image
-		this.img=new Image("C:\\javaProject\\JavaModels\\Title_Backgroud_Image.png");
+		this.img=new Image("C:\\javaProject\\JavaModels\\Ending_Backgroud_Image.png");
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class Title extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		// TODO Auto-generated method stub
-		g.drawImage(img, 0, 0);
+		g.drawImage(img,0,0);
 	}
 
 	@Override
@@ -50,14 +48,5 @@ public class Title extends BasicGameState {
 		// TODO Auto-generated method stub
 		return this.ID;
 	}
-	@Override
-	public void keyReleased(int key, char c) {
-		switch(key) {
-		// Press any key 하면 전환되게
-		case Input.KEY_1:
-			// MainFrame으로
-			game.enterState(1);
-			break;
-		}
-	}
+
 }

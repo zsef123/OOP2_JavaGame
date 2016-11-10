@@ -1,27 +1,35 @@
 package gameStates;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Vector;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import controller.GameObjectID;
 import controller.GameStateID;
-import models.*;
-public class Stage1 extends Stage {
+import models.Ball;
+import models.GameObject;
+import models.Player;
+import models.Target;
+import models.Wall;
+
+public class Stage2 extends Stage {
+
 	protected int maxCnt;
-	public Stage1(int id) {
+	public Stage2(int id) {
 		super(id);
-		stageIndex=1;
+		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
-	// init은 main에서 한번만 불린다 state의 전환과 무관하다.
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		// TODO Auto-generated method stub
+
 		this.game=sbg;
 		// TODO Auto-generated method stub
 		bgImage=new Image("C:\\javaProject\\JavaModels\\Game_Background_Image.png");
@@ -35,7 +43,7 @@ public class Stage1 extends Stage {
 		// map[posY][posX]
 		map=new int[mapWidth][mapHeight];
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("C:\\javaProject\\JavaModels\\Stages\\Stage1.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("C:\\javaProject\\JavaModels\\Stages\\Stage2.txt"));
 			for( int i=0; i<mapWidth;i++) {
 				String line=br.readLine();
 				if ( line == null) break;
@@ -59,9 +67,10 @@ public class Stage1 extends Stage {
 		}
 		
 	}
+
 	public void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException {
 		if ( cnt== maxCnt) {
-			game.enterState(stageIndex+1);
+			game.enterState(3);
 		}
 	}
 }

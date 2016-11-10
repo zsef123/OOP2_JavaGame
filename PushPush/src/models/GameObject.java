@@ -7,7 +7,7 @@ import org.newdawn.slick.geom.Shape;
 abstract public class GameObject {
 	protected BasicGame scene;
 	protected Shape rect;
-	public float posX,posY;
+	public int posX,posY;
 	// use name on Unity
 	// tag means type of gameobjcet( like a player, just wall , unmoveable ,... etc)
 	protected int tag;
@@ -23,6 +23,14 @@ abstract public class GameObject {
 		this.tag=tag;
 		this.name=name;
 	}
-	abstract public void setPos(float x, float y);
+	abstract public void setPos(int x, int y);
 	abstract public Image getImage();
+	public int getX() {
+		// TODO Auto-generated method stub
+		return this.posX;
+	}
+	public int getY() {
+		// TODO Auto-generated method stub
+		return this.posY;
+	}
 }

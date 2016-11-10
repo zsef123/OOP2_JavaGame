@@ -8,8 +8,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-import gameStates.Stage1;
-import gameStates.Title;
+import gameStates.*;
 
 public class Main extends StateBasedGame {
 	// 나중에 변환 가능하게 바꾼다.
@@ -25,8 +24,12 @@ public class Main extends StateBasedGame {
 	public void initStatesList(GameContainer gc) throws SlickException {
 		// TODO Auto-generated method stub
 		this.addState(new Title(GameStateID.TITLE.ID));
-		//temp
 		this.addState(new Stage1(1));
+		this.addState(new Stage2(2));
+		this.addState(new Stage3(3));
+
+		// 이거 넣으면 오류난다
+		this.addState(new Ending(GameStateID.ENDING.ID));
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

@@ -28,7 +28,7 @@ public abstract class Map extends GameObject {
 	// 여기에 플레이어, 벽 추가
 	public abstract void mapSetting() throws SlickException ;
 	@Override
-	public void setPos(float x, float y) {
+	public void setPos(int x, int y) {
 		// TODO Auto-generated method stub
 		posX=0;
 		posY=0;
