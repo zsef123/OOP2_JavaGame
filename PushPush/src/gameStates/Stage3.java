@@ -15,7 +15,6 @@ import controller.GameStateID;
 import models.*;
 
 public class Stage3 extends Stage {
-	protected int maxCnt;
 
 	public Stage3(int id) {
 		super(id);
@@ -39,39 +38,13 @@ public class Stage3 extends Stage {
 		objs.put(25, new TeleportIn(25,"stg1_TeleIn"));
 		objs.put(26, new TeleportOut(26,"stg1_TeleOut"));
 		// map[posY][posX]
-		map=new int[mapWidth][mapHeight];
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(fileDir+"Stage3.txt"));
-			for( int i=0; i<mapWidth;i++) {
-				String line=br.readLine();
-				if ( line == null) break;
-				String[] lineSplit= line.split("\t");
-				for( int j=0;j<mapHeight; j++) {
-					map[i][j] = Integer.parseInt(lineSplit[j]) ;
-					if ( map[i][j] == 1 ) {
-						playerPosX=j;
-						playerPosY=i;
-						map[i][j]=0;
-					}
-					if (map[i][j] == GameObjectID.TARGET.ID) {
-						maxCnt++;
-					}
-					else if (map[i][j] == GameObjectID.TELEPORTOUT.ID) {
-						objs.get(GameObjectID.TELEPORTOUT.ID).setPos(j, i);
-					}
-				}
-			}
-			br.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		mapInit();
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException {
-		if ( cnt== maxCnt) {
+		if ( cnt== maxCnt && cnt > 0 ) {
 			game.enterState(GameStateID.ENDING.ID);
 		}
 	}
+
 }

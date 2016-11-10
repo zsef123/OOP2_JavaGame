@@ -17,20 +17,22 @@ import controller.GameObjectID;
 import controller.GameStateID;
 public abstract class Stage extends BasicGameState {
 	StateBasedGame game;
+	GameContainer gc;
 	protected int ID;
 	protected int stageIndex;
 	protected Image bgImage;
 	protected HashMap<Integer,GameObject> objs;
 	protected String fileDir="C:\\javaProject\\JavaModels\\Stages\\";
 	// ±×·ÁÁÙ ¸Ê
-	
+
+	protected int cnt;
+	protected int maxCnt;
 	protected int playerPosX;
 	protected int playerPosY;
 	private int saveMapValue;
 	public int[][] map;
 	public final int mapWidth=20;
 	public final int mapHeight=15;
-	protected int cnt;
 	public Stage(int id) {
 		// TODO Auto-generated constructor stub
 		this.ID=id;
@@ -39,7 +41,39 @@ public abstract class Stage extends BasicGameState {
 
 	@Override
 	abstract public void init(GameContainer gc, StateBasedGame sbg) throws SlickException;
-	
+	public void mapInit() {
+		// TODO Auto-generated method stub
+		cnt=0;
+		maxCnt=0;
+		map=new int[mapWidth][mapHeight];
+		try {
+			String fileName=fileDir+"Stage"+Integer.toString(ID)+".txt";
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
+			for( int i=0; i<mapWidth;i++) {
+				String line=br.readLine();
+				if ( line == null) break;
+				String[] lineSplit= line.split("\t");
+				for( int j=0;j<mapHeight; j++) {
+					map[i][j] = Integer.parseInt(lineSplit[j]) ;
+					if ( map[i][j] == 1 ) {
+						playerPosX=j;
+						playerPosY=i;
+						map[i][j]=0;
+					}
+					if (map[i][j] == GameObjectID.TARGET.ID) {
+						maxCnt++;
+					}
+					else if ( map[i][j] == GameObjectID.TELEPORTOUT.ID) {
+						objs.get(GameObjectID.TELEPORTOUT.ID).setPos(j , i);
+					}
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		// TODO Auto-generated method stub
@@ -66,8 +100,10 @@ public abstract class Stage extends BasicGameState {
 	}
 	public void keyPressed(int key, char code) {
 		System.out.println("Key:"+code+","+key);
-		if (key == 'r') {
-			
+		System.out.println("cnt:"+cnt+" maxcnt:"+maxCnt);
+		if (code == 'r') {
+			System.out.println("reset");
+			mapInit();
 		}
 		else
 			playerMove(key);
@@ -83,7 +119,7 @@ public abstract class Stage extends BasicGameState {
 				playerPosX--;
 			else if (collision == GameObjectID.TELEPORTIN.ID ) {
 				playerPosX=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
-				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getY();
 			}
 			else if (collision == GameObjectID.BALL.ID) {
 				int colisionWithBall= map[playerPosY][playerPosX-2];
@@ -120,7 +156,7 @@ public abstract class Stage extends BasicGameState {
 				playerPosX++;
 			else if (collision == GameObjectID.TELEPORTIN.ID ) {
 				playerPosX=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
-				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getY();
 			}
 			else if (collision == GameObjectID.BALL.ID) {
 				int colisionWithBall= map[playerPosY][playerPosX+2];
@@ -157,7 +193,7 @@ public abstract class Stage extends BasicGameState {
 				playerPosY--;
 			else if (collision == GameObjectID.TELEPORTIN.ID ) {
 				playerPosX=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
-				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getY();
 			}
 			else if (collision == GameObjectID.BALL.ID) {
 				int colisionWithBall= map[playerPosY-2][playerPosX];
@@ -194,7 +230,7 @@ public abstract class Stage extends BasicGameState {
 				playerPosY++;
 			else if (collision == GameObjectID.TELEPORTIN.ID ) {
 				playerPosX=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
-				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getX();
+				playerPosY=objs.get(GameObjectID.TELEPORTOUT.ID).getY();
 			}
 			else if (collision == GameObjectID.BALL.ID) {
 				int colisionWithBall= map[playerPosY+2][playerPosX];

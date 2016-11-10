@@ -20,7 +20,6 @@ import models.Wall;
 
 public class Stage2 extends Stage {
 
-	protected int maxCnt;
 	public Stage2(int id) {
 		super(id);
 		// TODO Auto-generated constructor stub
@@ -41,35 +40,12 @@ public class Stage2 extends Stage {
 		objs.put(3, new Target(3,"stg1_target"));
 		objs.put(5, new Target(5,"stg1_filledtarget"));
 		// map[posY][posX]
-		map=new int[mapWidth][mapHeight];
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("C:\\javaProject\\JavaModels\\Stages\\Stage2.txt"));
-			for( int i=0; i<mapWidth;i++) {
-				String line=br.readLine();
-				if ( line == null) break;
-				String[] lineSplit= line.split("\t");
-				for( int j=0;j<mapHeight; j++) {
-					map[i][j] = Integer.parseInt(lineSplit[j]) ;
-					if ( map[i][j] == 1 ) {
-						playerPosX=j;
-						playerPosY=i;
-						map[i][j]=0;
-					}
-					if (map[i][j] == GameObjectID.TARGET.ID) {
-						maxCnt++;
-					}
-				}
-			}
-			br.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
+		mapInit();
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException {
-		if ( cnt== maxCnt) {
+		if ( cnt== maxCnt && cnt > 0) {
 			game.enterState(3);
 		}
 	}
