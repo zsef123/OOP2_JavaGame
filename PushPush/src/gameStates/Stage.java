@@ -25,9 +25,10 @@ public abstract class Stage extends BasicGameState {
 	protected HashMap<Integer,GameObject> objs;
 	protected String fileDir="C:\\javaProject\\JavaModels\\Stages\\";
 	// ±×·ÁÁÙ ¸Ê
+	protected int moveConut;
 	protected int time;
-	protected int cnt;
-	protected int maxCnt;
+	protected int targetCount;
+	protected int maxTargetCount;
 	protected int playerPosX;
 	protected int playerPosY;
 	private int saveMapValue;
@@ -38,13 +39,14 @@ public abstract class Stage extends BasicGameState {
 	public Stage(int id) {
 		// TODO Auto-generated constructor stub
 		this.ID=id;
-		cnt=0;
+		targetCount=0;
 	}
 
 	@Override
 	abstract public void init(GameContainer gc, StateBasedGame sbg) throws SlickException;
 	protected void moveInit() {
-		move= new PlayerMove();
+		move= PlayerMove.getInstance();
+		move.setZeroMoveCount();
 		move.setPos(playerPosX, playerPosY);
 		if ( objs.get(GameObjectID.TELEPORTOUT.ID) != null ) {
 			move.setTeleportPos(objs.get(GameObjectID.TELEPORTOUT.ID).posX, objs.get(GameObjectID.TELEPORTOUT.ID).posY);
@@ -52,8 +54,8 @@ public abstract class Stage extends BasicGameState {
 	}
 	public void mapInit() {
 		// TODO Auto-generated method stub
-		cnt=0;
-		maxCnt=0;
+		targetCount=0;
+		maxTargetCount=0;
 		map=new int[mapWidth][mapHeight];
 		try {
 			String fileName=fileDir+"Stage"+Integer.toString(ID)+".txt";
@@ -70,7 +72,7 @@ public abstract class Stage extends BasicGameState {
 						map[i][j]=0;
 					}
 					if (map[i][j] == GameObjectID.TARGET.ID) {
-						maxCnt++;
+						maxTargetCount++;
 					}
 					else if ( map[i][j] == GameObjectID.TELEPORTOUT.ID) {
 						objs.get(GameObjectID.TELEPORTOUT.ID).setPos(j , i);
@@ -104,13 +106,11 @@ public abstract class Stage extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException;
+	
 	public void keyPressed(int key, char code) {
 		System.out.println("Key:"+code+","+key);
-		System.out.println("cnt:"+cnt+" maxcnt:"+maxCnt);
+		System.out.println("cnt:"+targetCount+" maxcnt:"+maxTargetCount);
 		if (code == 'r') {
 			System.out.println("reset");
 			time=0;
@@ -123,10 +123,9 @@ public abstract class Stage extends BasicGameState {
 		//end 
 		move.setPos(playerPosX, playerPosY);
 		switch(key) {
-		case Input.KEY_LEFT:
-			
+		case Input.KEY_LEFT:			
 			// game ending count
-			cnt+=move.leftMove(map);
+			targetCount+=move.leftMove(map);
 			playerPosX=move.getX();
 			playerPosY=move.getY();
 			/*
@@ -169,20 +168,17 @@ public abstract class Stage extends BasicGameState {
 			*/
 			break;
 		case Input.KEY_RIGHT:
-
-			cnt+=move.rightMove(map);
+			targetCount+=move.rightMove(map);
 			playerPosX=move.getX();
 			playerPosY=move.getY();
 			break;
 		case Input.KEY_UP:
-
-			cnt+=move.upMove(map);
+			targetCount+=move.upMove(map);
 			playerPosX=move.getX();
 			playerPosY=move.getY();
 			break;
 		case Input.KEY_DOWN:
-
-			cnt+=move.downMove(map);
+			targetCount+=move.downMove(map);
 			playerPosX=move.getX();
 			playerPosY=move.getY();
 			break;
