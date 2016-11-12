@@ -8,7 +8,7 @@ public enum GameObjectID {
 		this.ID = a;
 	}
 
-	public int getValue() {
+	public int getID() {
 		return ID;
 	}
 	public static GameObjectID fromInt(int value) {

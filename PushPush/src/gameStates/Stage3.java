@@ -30,15 +30,16 @@ public class Stage3 extends Stage {
 		bgImage=new Image("C:\\javaProject\\JavaModels\\Game_Background_Image.png");
 		objs=new HashMap<Integer,GameObject>();
 		
-		objs.put(9, new Wall(9,"stg1_wall"));
-		objs.put(1, new Player(1,"stg1_player"));
-		objs.put(2, new Ball(2,"stg_ball"));
-		objs.put(3, new Target(3,"stg1_target"));
-		objs.put(5, new Target(5,"stg1_filledtarget"));
-		objs.put(25, new TeleportIn(25,"stg1_TeleIn"));
-		objs.put(26, new TeleportOut(26,"stg1_TeleOut"));
+		objs.put(GameObjectID.WALL.ID, new Wall(GameObjectID.WALL.ID,"stg1_wall"));
+		objs.put(GameObjectID.PLAYER1.ID, new Player(GameObjectID.PLAYER1.ID,"stg1_player"));
+		objs.put(GameObjectID.BALL.ID, new Ball(GameObjectID.BALL.ID,"stg_ball"));
+		objs.put(GameObjectID.TARGET.ID, new Target(GameObjectID.TARGET.ID,"stg1_target"));
+		objs.put(GameObjectID.FILLEDTARGET.ID, new Target(GameObjectID.FILLEDTARGET.ID,"stg1_filledtarget"));
+		objs.put(GameObjectID.TELEPORTIN.ID, new TeleportIn(GameObjectID.TELEPORTIN.ID,"stg1_TeleIn"));
+		objs.put(GameObjectID.TELEPORTOUT.ID, new TeleportOut(GameObjectID.TELEPORTOUT.ID,"stg1_TeleOut"));
 		// map[posY][posX]
 		mapInit();
+		moveInit();
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {

@@ -35,6 +35,7 @@ public class Stage1 extends Stage {
 		// map[posY][posX]
 		
 		mapInit();
+		moveInit();
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		time+=delta;

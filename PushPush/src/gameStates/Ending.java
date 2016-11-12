@@ -30,6 +30,9 @@ public class Ending extends BasicGameState {
 		this.gc=gc;
 		this.game=sbg;
 	}
+	private void getAllScore() {
+		
+	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
