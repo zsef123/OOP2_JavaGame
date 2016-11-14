@@ -27,6 +27,7 @@ public class Main extends StateBasedGame {
 		this.addState(new Stage1(1));
 		this.addState(new Stage2(2));
 		this.addState(new Stage3(3));
+		this.addState(new Stage4(4));
 
 		// 이거 넣으면 오류난다
 		this.addState(new Ending(GameStateID.ENDING.ID));

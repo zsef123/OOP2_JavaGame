@@ -25,16 +25,20 @@ public abstract class Stage extends BasicGameState {
 	protected HashMap<Integer,GameObject> objs;
 	protected String fileDir="C:\\javaProject\\JavaModels\\Stages\\";
 	// 그려줄 맵
-	protected int moveConut;
+	protected int moveCount;
 	protected int time;
 	protected int targetCount;
+	protected int resetCount=3;
 	protected int maxTargetCount;
+	
 	protected int playerPosX;
 	protected int playerPosY;
 	private int saveMapValue;
+	
 	public int[][] map;
 	public final int mapWidth=20;
 	public final int mapHeight=15;
+	
 	private PlayerMove move;
 	public Stage(int id) {
 		// TODO Auto-generated constructor stub
@@ -71,7 +75,7 @@ public abstract class Stage extends BasicGameState {
 						playerPosY=i;
 						map[i][j]=0;
 					}
-					if (map[i][j] == GameObjectID.TARGET.ID) {
+					else if (map[i][j] == GameObjectID.TARGET.ID) {
 						maxTargetCount++;
 					}
 					else if ( map[i][j] == GameObjectID.TELEPORTOUT.ID) {
@@ -91,6 +95,7 @@ public abstract class Stage extends BasicGameState {
 		//해상도로 바꾼다
 		bgImage.draw(0,0,640,480);
 		g.drawString("Time : " + time/1000, 450, 50);
+		g.drawString("Move : " + moveCount , 450, 150);
 		for (int i=0;i<mapWidth; i++) {
 			for( int j=0; j<mapHeight; j++) {
 				GameObjectID value=GameObjectID.fromInt(map[i][j]);
@@ -102,7 +107,7 @@ public abstract class Stage extends BasicGameState {
 				}
 			}
 		}
-		objs.get(1).getImage().draw(playerPosX*20+10, playerPosY*20+5);
+		((Player) objs.get(1)).getAnimation().draw(playerPosX*20+10, playerPosY*20+5);
 	}
 
 	@Override
@@ -112,8 +117,10 @@ public abstract class Stage extends BasicGameState {
 		System.out.println("Key:"+code+","+key);
 		System.out.println("cnt:"+targetCount+" maxcnt:"+maxTargetCount);
 		if (code == 'r') {
-			System.out.println("reset");
-			time=0;
+			System.out.println("reset:"+resetCount);
+			// 왜 마이너스가 안될까
+			resetCount--;
+			moveCount=0;
 			mapInit();
 		}
 		else
@@ -126,6 +133,7 @@ public abstract class Stage extends BasicGameState {
 		case Input.KEY_LEFT:			
 			// game ending count
 			targetCount+=move.leftMove(map);
+			moveCount=move.getMoveCount();
 			playerPosX=move.getX();
 			playerPosY=move.getY();
 			/*
@@ -169,16 +177,19 @@ public abstract class Stage extends BasicGameState {
 			break;
 		case Input.KEY_RIGHT:
 			targetCount+=move.rightMove(map);
+			moveCount=move.getMoveCount();
 			playerPosX=move.getX();
 			playerPosY=move.getY();
 			break;
 		case Input.KEY_UP:
 			targetCount+=move.upMove(map);
+			moveCount=move.getMoveCount();
 			playerPosX=move.getX();
 			playerPosY=move.getY();
 			break;
 		case Input.KEY_DOWN:
 			targetCount+=move.downMove(map);
+			moveCount=move.getMoveCount();
 			playerPosX=move.getX();
 			playerPosY=move.getY();
 			break;

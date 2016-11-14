@@ -28,8 +28,9 @@ public class PlayerMove {
 	public static PlayerMove getInstance() {
 		return Singleton.instance;
 	}
+	
 	public void setZeroMoveCount() {
-		this.moveCount=0;
+		moveCount=0;
 	}
 	public int getMoveCount() {
 		return moveCount;
@@ -84,6 +85,9 @@ public class PlayerMove {
 			break;
 		case WALL:
 			// don't do it
+			break;
+		case UPLADDER:
+			
 			break;
 		default:
 			break;

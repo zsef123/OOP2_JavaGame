@@ -39,9 +39,12 @@ public class Stage1 extends Stage {
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		time+=delta;
-		
+		((Player) objs.get(1)).getAnimation().update(delta);
 		if ( targetCount== maxTargetCount && targetCount > 0 ) {
 			game.enterState(2);
+		}
+		if ( resetCount == 0) {
+			game.enterState(GameStateID.ENDING.ID);
 		}
 	}
 

@@ -45,6 +45,9 @@ public class Stage3 extends Stage {
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		time+=delta;
 		if ( targetCount== maxTargetCount && targetCount > 0 ) {
+			game.enterState(4);
+		}
+		if ( resetCount == 0) {
 			game.enterState(GameStateID.ENDING.ID);
 		}
 	}
