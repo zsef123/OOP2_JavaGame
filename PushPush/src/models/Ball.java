@@ -29,5 +29,10 @@ public class Ball extends GameObject {
 		// TODO Auto-generated method stub
 		return sprite;
 	}
+	public void collision() {
+		// how?
+		posX++;
+		posY++;
+	}
 
 }

@@ -2,7 +2,9 @@ package gameStates;
 
 
 import java.io.*;
+import java.util.EmptyStackException;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.newdawn.slick.GameContainer;
@@ -16,6 +18,7 @@ import models.*;
 import controller.GameObjectID;
 import controller.GameStateID;
 import controller.PlayerMove;
+import controller.Undo;
 public abstract class Stage extends BasicGameState {
 	StateBasedGame game;
 	GameContainer gc;
@@ -31,6 +34,9 @@ public abstract class Stage extends BasicGameState {
 	protected int resetCount=3;
 	protected int maxTargetCount;
 	
+	protected Stack<Undo> undoStack;
+	protected int saveUndoIndex;
+	protected int getUndoIndex;
 	protected int playerPosX;
 	protected int playerPosY;
 	private int saveMapValue;
@@ -44,10 +50,13 @@ public abstract class Stage extends BasicGameState {
 		// TODO Auto-generated constructor stub
 		this.ID=id;
 		targetCount=0;
+		saveUndoIndex=-1;
+		getUndoIndex=0;
 	}
 
 	@Override
 	abstract public void init(GameContainer gc, StateBasedGame sbg) throws SlickException;
+	
 	protected void moveInit() {
 		move= PlayerMove.getInstance();
 		move.setZeroMoveCount();
@@ -88,6 +97,8 @@ public abstract class Stage extends BasicGameState {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		undoStack=new Stack<Undo>();
+		
 	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
@@ -112,7 +123,12 @@ public abstract class Stage extends BasicGameState {
 
 	@Override
 	public abstract void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException;
-	
+	private void doUndo(Undo undo) {
+		playerPosX=undo.getX();
+		playerPosY=undo.getY();
+		targetCount=undo.getTarget();
+		map=undo.getMap();
+	}
 	public void keyPressed(int key, char code) {
 		System.out.println("Key:"+code+","+key);
 		System.out.println("cnt:"+targetCount+" maxcnt:"+maxTargetCount);
@@ -120,22 +136,36 @@ public abstract class Stage extends BasicGameState {
 			System.out.println("reset:"+resetCount);
 			// 왜 마이너스가 안될까
 			resetCount--;
-			moveCount=0;
+			moveCount=move.setZeroMoveCount();;
 			mapInit();
+		}
+		else if (code == 'z') {
+			try {
+				doUndo( undoStack.pop() );
+			}
+			catch (EmptyStackException e) {
+				// do nothing
+			}
+			System.out.println("getundo:"+getUndoIndex);
 		}
 		else
 			playerMove(key);
 	}
 	private void playerMove(int key) {
-		//end 
+		//end
+		// how to remove trash move
+		undoStack.push(new Undo(playerPosX, playerPosY, targetCount, map));
 		move.setPos(playerPosX, playerPosY);
 		switch(key) {
 		case Input.KEY_LEFT:			
 			// game ending count
 			targetCount+=move.leftMove(map);
+			
+			/*
 			moveCount=move.getMoveCount();
 			playerPosX=move.getX();
 			playerPosY=move.getY();
+			*/
 			/*
 			collision = map[playerPosY][playerPosX-1];
 			if (collision == GameObjectID.EMPTY.ID || collision == GameObjectID.TARGET.ID)
@@ -177,24 +207,18 @@ public abstract class Stage extends BasicGameState {
 			break;
 		case Input.KEY_RIGHT:
 			targetCount+=move.rightMove(map);
-			moveCount=move.getMoveCount();
-			playerPosX=move.getX();
-			playerPosY=move.getY();
 			break;
 		case Input.KEY_UP:
 			targetCount+=move.upMove(map);
-			moveCount=move.getMoveCount();
-			playerPosX=move.getX();
-			playerPosY=move.getY();
 			break;
 		case Input.KEY_DOWN:
 			targetCount+=move.downMove(map);
-			moveCount=move.getMoveCount();
-			playerPosX=move.getX();
-			playerPosY=move.getY();
 			break;
 		}
-		
+
+		moveCount=move.getMoveCount();
+		playerPosX=move.getX();
+		playerPosY=move.getY();
 		//map[playerPosY][playerPosX]=saveValue;
 	}
 	@Override

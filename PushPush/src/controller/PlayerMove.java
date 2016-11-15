@@ -29,8 +29,9 @@ public class PlayerMove {
 		return Singleton.instance;
 	}
 	
-	public void setZeroMoveCount() {
+	public int setZeroMoveCount() {
 		moveCount=0;
+		return 0;
 	}
 	public int getMoveCount() {
 		return moveCount;
@@ -119,10 +120,10 @@ public class PlayerMove {
 			moveToTeleport();
 			break;
 		case TELEPORTOUT:
-			// don't do it
+			// do nothing
 			break;
 		case WALL:
-			// don't do it
+			// do nothing
 			break;
 		default:
 			break;
