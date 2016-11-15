@@ -21,17 +21,18 @@ public class Stage1 extends Stage {
 	@Override
 	// init은 main에서 한번만 불린다 state의 전환과 무관하다.
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		
 		this.game=sbg;
 		this.time=0;
 		// TODO Auto-generated method stub
 		bgImage=new Image("C:\\javaProject\\JavaModels\\Game_Background_Image.png");
 		objs=new HashMap<Integer,GameObject>();
-		
-		objs.put(9, new Wall(9,"stg1_wall"));
-		objs.put(1, new Player(1,"stg1_player"));
-		objs.put(2, new Ball(2,"stg_ball"));
-		objs.put(3, new Target(3,"stg1_target"));
-		objs.put(5, new Target(5,"stg1_filledtarget"));
+
+		objs.put(GameObjectID.WALL.ID, new Wall(GameObjectID.WALL.ID,"stg1_wall"));
+		objs.put(GameObjectID.PLAYER1.ID, new Player(GameObjectID.PLAYER1.ID,"stg1_player"));
+		objs.put(GameObjectID.BALL.ID, new Ball(GameObjectID.BALL.ID,"stg_ball"));
+		objs.put(GameObjectID.TARGET.ID, new Target(GameObjectID.TARGET.ID,"stg1_target"));
+		objs.put(GameObjectID.FILLEDTARGET.ID, new Target(GameObjectID.FILLEDTARGET.ID,"stg1_filledtarget"));
 		// map[posY][posX]
 		
 		mapInit();

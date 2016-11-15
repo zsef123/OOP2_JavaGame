@@ -56,7 +56,7 @@ public class Title extends BasicGameState {
 		// Press any key 하면 전환되게
 		case Input.KEY_1:
 			// MainFrame으로
-			game.enterState(1);
+			game.enterState(2);
 			break;
 		}
 	}

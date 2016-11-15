@@ -7,7 +7,7 @@ import models.GameObject;
 
 public class PlayerMove {
 	private int key;
-	
+	private int targetCount;
 	private int posX;
 	private int posY;
 	
@@ -33,8 +33,15 @@ public class PlayerMove {
 		moveCount=0;
 		return 0;
 	}
+	public int setZeroTargetCount() {
+		targetCount=0;
+		return 0;
+	}
 	public int getMoveCount() {
 		return moveCount;
+	}
+	public int getTargetCount() {
+		return targetCount;
 	}
 	
 	public void setPos(int x, int y) {
@@ -59,10 +66,9 @@ public class PlayerMove {
 	
 	public int leftMove(int[][] map ) {
 		collisionID = GameObjectID.fromInt( map[posY][posX-1] );
-		int targetCount=0;
 		switch( collisionID ) {
 		// some apply on duff's device
-		case EMPTY: case TARGET:
+		case EMPTY: case TARGET: case TARGET2:
 			posX--; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
@@ -75,6 +81,19 @@ public class PlayerMove {
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET) 
+					targetCount--;
+			}
+			break;
+		case BALL2: case FILLEDTARGET2:
+			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX-2] );
+			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
+				posX--; moveCount++;
+				map[posY][posX]-=GameObjectID.BALL2.ID;
+				// 공을 밀고 값을 안바꾸잖아.
+				map[posY][posX-1]+=GameObjectID.BALL2.ID;
+				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
+					targetCount++;	
+				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET2) 
 					targetCount--;
 			}
 			break;
@@ -94,11 +113,10 @@ public class PlayerMove {
 			break;
 			
 		}
-		return targetCount;
+		return collisionID.ID;
 	}
 	public int rightMove(int[][] map ) {
 		collisionID = GameObjectID.fromInt( map[posY][posX+1] );
-		int targetCount=0;
 		switch( collisionID ) {
 		case EMPTY: case TARGET:
 			posX++; moveCount++;
@@ -129,11 +147,10 @@ public class PlayerMove {
 			break;
 			
 		}
-		return targetCount;
+		return collisionID.ID;
 	}
 	public int upMove(int[][] map ) {
 		collisionID = GameObjectID.fromInt( map[posY-1][posX] );
-		int targetCount=0;
 		switch( collisionID ) {
 		case EMPTY: case TARGET:
 			posY--; moveCount++;
@@ -164,11 +181,10 @@ public class PlayerMove {
 			break;
 			
 		}
-		return targetCount;
+		return collisionID.ID;
 	}
 	public int downMove(int[][] map ) {
 		collisionID = GameObjectID.fromInt( map[posY+1][posX] );
-		int targetCount=0;
 		switch( collisionID ) {
 		case EMPTY: case TARGET:
 			posY++; moveCount++;
@@ -199,7 +215,7 @@ public class PlayerMove {
 			break;
 			
 		}
-		return targetCount;
+		return collisionID.ID;
 	}
 	
 	public int keySwitch(int k) {

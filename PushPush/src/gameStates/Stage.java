@@ -56,10 +56,20 @@ public abstract class Stage extends BasicGameState {
 
 	@Override
 	abstract public void init(GameContainer gc, StateBasedGame sbg) throws SlickException;
-	
+	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		mapInit();
+		moveInit();
+	}
+	public void leave(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		
+	}
 	protected void moveInit() {
 		move= PlayerMove.getInstance();
+		
+		// set zero가 안된다
 		move.setZeroMoveCount();
+		move.setZeroTargetCount();
+		
 		move.setPos(playerPosX, playerPosY);
 		if ( objs.get(GameObjectID.TELEPORTOUT.ID) != null ) {
 			move.setTeleportPos(objs.get(GameObjectID.TELEPORTOUT.ID).posX, objs.get(GameObjectID.TELEPORTOUT.ID).posY);
@@ -84,7 +94,7 @@ public abstract class Stage extends BasicGameState {
 						playerPosY=i;
 						map[i][j]=0;
 					}
-					else if (map[i][j] == GameObjectID.TARGET.ID) {
+					else if (map[i][j] == GameObjectID.TARGET.ID || map[i][j] == GameObjectID.TARGET2.ID ) {
 						maxTargetCount++;
 					}
 					else if ( map[i][j] == GameObjectID.TELEPORTOUT.ID) {
@@ -109,13 +119,12 @@ public abstract class Stage extends BasicGameState {
 		g.drawString("Move : " + moveCount , 450, 150);
 		for (int i=0;i<mapWidth; i++) {
 			for( int j=0; j<mapHeight; j++) {
-				GameObjectID value=GameObjectID.fromInt(map[i][j]);
-				
-				// objs.get(map[i][j].getImage() 로하면 완벽하다
+
 				if ( map[i][j] != 0 ) {
 					Image img=objs.get(map[i][j]).getImage();
 					img.draw(((float)j*20)+10, ((float)i*20)+5);
 				}
+				
 			}
 		}
 		((Player) objs.get(1)).getAnimation().draw(playerPosX*20+10, playerPosY*20+5);
@@ -133,10 +142,12 @@ public abstract class Stage extends BasicGameState {
 		System.out.println("Key:"+code+","+key);
 		System.out.println("cnt:"+targetCount+" maxcnt:"+maxTargetCount);
 		if (code == 'r') {
+			// reset
 			System.out.println("reset:"+resetCount);
 			// 왜 마이너스가 안될까
 			resetCount--;
-			moveCount=move.setZeroMoveCount();;
+			moveCount=move.setZeroMoveCount();
+			targetCount=move.setZeroTargetCount();
 			mapInit();
 		}
 		else if (code == 'z') {
@@ -156,10 +167,11 @@ public abstract class Stage extends BasicGameState {
 		// how to remove trash move
 		undoStack.push(new Undo(playerPosX, playerPosY, targetCount, map));
 		move.setPos(playerPosX, playerPosY);
+		int collisionID = 0;
 		switch(key) {
 		case Input.KEY_LEFT:			
 			// game ending count
-			targetCount+=move.leftMove(map);
+			collisionID=move.leftMove(map);
 			
 			/*
 			moveCount=move.getMoveCount();
@@ -206,20 +218,22 @@ public abstract class Stage extends BasicGameState {
 			*/
 			break;
 		case Input.KEY_RIGHT:
-			targetCount+=move.rightMove(map);
+			collisionID=move.rightMove(map);
 			break;
 		case Input.KEY_UP:
-			targetCount+=move.upMove(map);
+			collisionID=move.upMove(map);
 			break;
 		case Input.KEY_DOWN:
-			targetCount+=move.downMove(map);
+			collisionID=move.downMove(map);
 			break;
 		}
-
+		targetCount=move.getTargetCount();
 		moveCount=move.getMoveCount();
 		playerPosX=move.getX();
 		playerPosY=move.getY();
-		//map[playerPosY][playerPosX]=saveValue;
+
+		//only case if collisionID is items
+		
 	}
 	@Override
 	public int getID() {

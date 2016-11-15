@@ -6,38 +6,32 @@ import org.newdawn.slick.SlickException;
 
 import controller.GameObjectID;
 
-public class Ball extends GameObject {
-	protected Image sprite;
-	public Ball(BasicGame nowScene, int tag, String name) {
+public class Target2 extends GameObject {
+	protected Image targetImage;
+	public Target2(BasicGame nowScene, int tag, String name) {
 		super(nowScene, tag, name);
 		// TODO Auto-generated constructor stub
 	}
 
-	public Ball(int tag, String name) throws SlickException {
+	public Target2(int tag, String name) throws SlickException {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
-		if (tag ==GameObjectID.BALL.ID )
-			sprite=new Image("C:\\javaProject\\JavaModels\\ball.png");
-		else if (tag == GameObjectID.BALL2.ID)
-			sprite=new Image("C:\\javaProject\\JavaModels\\ball2.png");
+		if (tag==GameObjectID.TARGET2.ID) 
+			targetImage=new Image("C:\\javaProject\\JavaModels\\target2.png");
+		else if (tag ==GameObjectID.FILLEDTARGET2.ID ) 
+			targetImage=new Image("C:\\javaProject\\JavaModels\\FilledTarget2.png");
 	}
 
 	@Override
 	public void setPos(int x, int y) {
 		// TODO Auto-generated method stub
-		posX=x;
-		posY=y;
+
 	}
 
 	@Override
 	public Image getImage() {
 		// TODO Auto-generated method stub
-		return sprite;
-	}
-	public void collision() {
-		// how?
-		posX++;
-		posY++;
+		return targetImage;
 	}
 
 }
