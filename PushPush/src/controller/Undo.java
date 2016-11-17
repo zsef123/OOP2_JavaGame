@@ -17,11 +17,12 @@ public class Undo {
 		this.posX=x;
 		this.posY=y;
 		this.targetCount=targetcount;
-		//this.map=m;
+		// use shallow copy
 		map=new int[20][15];
 		for(int i=0; i<20; i++)
 			  for(int j=0; j<15; j++)
 			    map[i][j]=m[i][j];
+			    
 	}
 	
 	public int getX() {

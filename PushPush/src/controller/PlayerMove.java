@@ -22,11 +22,11 @@ public class PlayerMove {
 	// make singleton class uses holder idiom
 	private PlayerMove() {
 	}
-	private static class Singleton {
+	private static class SingletonMove {
 		private static final PlayerMove instance = new PlayerMove();
 	} 
 	public static PlayerMove getInstance() {
-		return Singleton.instance;
+		return SingletonMove.instance;
 	}
 	
 	public int setZeroMoveCount() {
@@ -39,6 +39,9 @@ public class PlayerMove {
 	}
 	public int getMoveCount() {
 		return moveCount;
+	}
+	public void setTargetCount(int count) {
+		targetCount=count;
 	}
 	public int getTargetCount() {
 		return targetCount;
@@ -68,7 +71,7 @@ public class PlayerMove {
 		collisionID = GameObjectID.fromInt( map[posY][posX-1] );
 		switch( collisionID ) {
 		// some apply on duff's device
-		case EMPTY: case TARGET: case TARGET2:
+		case EMPTY: case TARGET: case TARGET2: case TARGET3:
 			posX--; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
@@ -97,6 +100,19 @@ public class PlayerMove {
 					targetCount--;
 			}
 			break;
+		case BALL3: case FILLEDTARGET3:
+			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX-2] );
+			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
+				posX--; moveCount++;
+				map[posY][posX]-=GameObjectID.BALL3.ID;
+				// 공을 밀고 값을 안바꾸잖아.
+				map[posY][posX-1]+=GameObjectID.BALL3.ID;
+				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
+					targetCount++;	
+				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET3) 
+					targetCount--;
+			}
+			break;
 		case TELEPORTIN:
 			moveToTeleport();
 			break;
@@ -118,7 +134,7 @@ public class PlayerMove {
 	public int rightMove(int[][] map ) {
 		collisionID = GameObjectID.fromInt( map[posY][posX+1] );
 		switch( collisionID ) {
-		case EMPTY: case TARGET:
+		case EMPTY: case TARGET: case TARGET2: case TARGET3:
 			posX++; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
@@ -131,6 +147,32 @@ public class PlayerMove {
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET) 
+					targetCount--;
+			}
+			break;
+		case BALL2: case FILLEDTARGET2:
+			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX+2] );
+			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
+				posX++; moveCount++;
+				map[posY][posX]-=GameObjectID.BALL2.ID;
+				// 공을 밀고 값을 안바꾸잖아.
+				map[posY][posX+1]+=GameObjectID.BALL2.ID;
+				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
+					targetCount++;	
+				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET2) 
+					targetCount--;
+			}
+			break;
+		case BALL3: case FILLEDTARGET3:
+			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX+2] );
+			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
+				posX++; moveCount++;
+				map[posY][posX]-=GameObjectID.BALL3.ID;
+				// 공을 밀고 값을 안바꾸잖아.
+				map[posY][posX+1]+=GameObjectID.BALL3.ID;
+				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
+					targetCount++;	
+				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET3) 
 					targetCount--;
 			}
 			break;
@@ -152,7 +194,7 @@ public class PlayerMove {
 	public int upMove(int[][] map ) {
 		collisionID = GameObjectID.fromInt( map[posY-1][posX] );
 		switch( collisionID ) {
-		case EMPTY: case TARGET:
+		case EMPTY: case TARGET: case TARGET2: case TARGET3:
 			posY--; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
@@ -165,6 +207,32 @@ public class PlayerMove {
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET) 
+					targetCount--;
+			}
+			break;
+		case BALL2: case FILLEDTARGET2:
+			collisionWithBallID =  GameObjectID.fromInt( map[posY-2][posX] );
+			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
+				posY--; moveCount++;
+				map[posY][posX]-=GameObjectID.BALL2.ID;
+				// 공을 밀고 값을 안바꾸잖아.
+				map[posY-1][posY]+=GameObjectID.BALL2.ID;
+				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
+					targetCount++;	
+				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET2) 
+					targetCount--;
+			}
+			break;
+		case BALL3: case FILLEDTARGET3:
+			collisionWithBallID =  GameObjectID.fromInt( map[posY-2][posX] );
+			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
+				posY--; moveCount++;
+				map[posY][posX]-=GameObjectID.BALL3.ID;
+				// 공을 밀고 값을 안바꾸잖아.
+				map[posY-1][posY]+=GameObjectID.BALL3.ID;
+				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
+					targetCount++;	
+				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET3) 
 					targetCount--;
 			}
 			break;
@@ -186,7 +254,7 @@ public class PlayerMove {
 	public int downMove(int[][] map ) {
 		collisionID = GameObjectID.fromInt( map[posY+1][posX] );
 		switch( collisionID ) {
-		case EMPTY: case TARGET:
+		case EMPTY: case TARGET: case TARGET2: case TARGET3:
 			posY++; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
@@ -199,6 +267,32 @@ public class PlayerMove {
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET) 
+					targetCount--;
+			}
+			break;
+		case BALL2: case FILLEDTARGET2:
+			collisionWithBallID =  GameObjectID.fromInt( map[posY+2][posX] );
+			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
+				posY++; moveCount++;
+				map[posY][posX]-=GameObjectID.BALL2.ID;
+				// 공을 밀고 값을 안바꾸잖아.
+				map[posY+1][posX]+=GameObjectID.BALL2.ID;
+				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
+					targetCount++;	
+				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET2) 
+					targetCount--;
+			}
+			break;
+		case BALL3: case FILLEDTARGET3:
+			collisionWithBallID =  GameObjectID.fromInt( map[posY+2][posX] );
+			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
+				posY++; moveCount++;
+				map[posY][posX]-=GameObjectID.BALL3.ID;
+				// 공을 밀고 값을 안바꾸잖아.
+				map[posY+1][posX]+=GameObjectID.BALL3.ID;
+				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
+					targetCount++;	
+				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET3) 
 					targetCount--;
 			}
 			break;

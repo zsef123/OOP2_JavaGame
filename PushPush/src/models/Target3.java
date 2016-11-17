@@ -6,20 +6,21 @@ import org.newdawn.slick.SlickException;
 
 import controller.GameObjectID;
 
-public class Target2 extends GameObject {
+public class Target3 extends GameObject {
+
 	protected Image targetImage;
-	public Target2(BasicGame nowScene, int tag, String name) {
+	public Target3(BasicGame nowScene, int tag, String name) {
 		super(nowScene, tag, name);
 		// TODO Auto-generated constructor stub
 	}
 
-	public Target2(int tag, String name) throws SlickException {
+	public Target3(int tag, String name) throws SlickException {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
-		if (tag==GameObjectID.TARGET2.ID) 
-			targetImage=new Image("C:\\javaProject\\JavaModels\\objects\\target2.png");
-		else if (tag ==GameObjectID.FILLEDTARGET2.ID ) 
-			targetImage=new Image("C:\\javaProject\\JavaModels\\objects\\FilledTarget2.png");
+		if (tag==GameObjectID.TARGET3.ID) 
+			targetImage=new Image("C:\\javaProject\\JavaModels\\objects\\target3.png");
+		else if (tag ==GameObjectID.FILLEDTARGET3.ID ) 
+			targetImage=new Image("C:\\javaProject\\JavaModels\\objects\\FilledTarget3.png");
 	}
 
 	@Override

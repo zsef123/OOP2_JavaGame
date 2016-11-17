@@ -17,9 +17,11 @@ public class Ball extends GameObject {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
 		if (tag ==GameObjectID.BALL.ID )
-			sprite=new Image("C:\\javaProject\\JavaModels\\ball.png");
+			sprite=new Image("C:\\javaProject\\JavaModels\\objects\\ball.png");
 		else if (tag == GameObjectID.BALL2.ID)
-			sprite=new Image("C:\\javaProject\\JavaModels\\ball2.png");
+			sprite=new Image("C:\\javaProject\\JavaModels\\objects\\ball2.png");
+		else if (tag== GameObjectID.BALL3.ID)
+			sprite=new Image("C:\\javaProject\\JavaModels\\objects\\ball3.png");
 	}
 
 	@Override

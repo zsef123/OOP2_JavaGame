@@ -27,14 +27,19 @@ public class Stage3 extends Stage {
 
 		this.game=sbg;
 		// TODO Auto-generated method stub
-		bgImage=new Image("C:\\javaProject\\JavaModels\\Game_Background_Image.png");
 		objs=new HashMap<Integer,GameObject>();
 		
 		objs.put(GameObjectID.WALL.ID, new Wall(GameObjectID.WALL.ID,"stg1_wall"));
 		objs.put(GameObjectID.PLAYER1.ID, new Player(GameObjectID.PLAYER1.ID,"stg1_player"));
 		objs.put(GameObjectID.BALL.ID, new Ball(GameObjectID.BALL.ID,"stg_ball"));
+		objs.put(GameObjectID.BALL2.ID, new Ball(GameObjectID.BALL2.ID,"stg_ball"));
+		objs.put(GameObjectID.BALL3.ID, new Ball(GameObjectID.BALL3.ID,"stg_ball"));
 		objs.put(GameObjectID.TARGET.ID, new Target(GameObjectID.TARGET.ID,"stg1_target"));
 		objs.put(GameObjectID.FILLEDTARGET.ID, new Target(GameObjectID.FILLEDTARGET.ID,"stg1_filledtarget"));
+		objs.put(GameObjectID.TARGET2.ID, new Target2(GameObjectID.TARGET2.ID,"stg1_target"));
+		objs.put(GameObjectID.FILLEDTARGET2.ID, new Target2(GameObjectID.FILLEDTARGET2.ID,"stg1_filledtarget"));
+		objs.put(GameObjectID.TARGET3.ID, new Target3(GameObjectID.TARGET3.ID,"stg1_target"));
+		objs.put(GameObjectID.FILLEDTARGET3.ID, new Target3(GameObjectID.FILLEDTARGET3.ID,"stg1_filledtarget"));
 		objs.put(GameObjectID.TELEPORTIN.ID, new TeleportIn(GameObjectID.TELEPORTIN.ID,"stg1_TeleIn"));
 		objs.put(GameObjectID.TELEPORTOUT.ID, new TeleportOut(GameObjectID.TELEPORTOUT.ID,"stg1_TeleOut"));
 		// map[posY][posX]

@@ -21,8 +21,8 @@ public class Player extends GameObject {
 	public Player(int tag, String name) throws SlickException {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
-		playerImage = new Image("C:\\javaProject\\JavaModels\\player.png");
-		playerImage2 = new SpriteSheet("C:\\javaProject\\JavaModels\\player2.png", IMGWIDTH, IMGHEIGHT);
+		playerImage = new Image("C:\\javaProject\\JavaModels\\objects\\player.png");
+		playerImage2 = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\player2.png", IMGWIDTH, IMGHEIGHT);
 		playerAni = new Animation(playerImage2, 1000);
 	}
 

@@ -15,7 +15,7 @@ public class Wall extends GameObject {
 	public Wall(int tag, String name) throws SlickException {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
-		sprite=new Image("C:\\javaProject\\JavaModels\\wall.png");
+		sprite=new Image("C:\\javaProject\\JavaModels\\objects\\wall.png");
 	}
 
 	@Override

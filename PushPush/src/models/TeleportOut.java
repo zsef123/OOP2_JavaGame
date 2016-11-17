@@ -15,7 +15,7 @@ public class TeleportOut extends GameObject {
 	public TeleportOut(int tag, String name) throws SlickException {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
-		TeleportImage= new Image("C:\\javaProject\\JavaModels\\tpout.png");
+		TeleportImage= new Image("C:\\javaProject\\JavaModels\\objects\\tpout.png");
 	}
 
 	@Override

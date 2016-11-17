@@ -15,9 +15,9 @@ public class Target extends GameObject {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
 		if (tag==3) 
-			targetImage=new Image("C:\\javaProject\\JavaModels\\target.png");
+			targetImage=new Image("C:\\javaProject\\JavaModels\\objects\\target.png");
 		else if (tag ==5 ) 
-			targetImage=new Image("C:\\javaProject\\JavaModels\\FilledTarget.png");
+			targetImage=new Image("C:\\javaProject\\JavaModels\\objects\\FilledTarget.png");
 	}
 
 	@Override

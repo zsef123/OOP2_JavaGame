@@ -27,7 +27,6 @@ public class Stage2 extends Stage {
 
 		this.game=sbg;
 		// TODO Auto-generated method stub
-		bgImage=new Image("C:\\javaProject\\JavaModels\\Game_Background_Image.png");
 		objs=new HashMap<Integer,GameObject>();
 		
 		objs.put(GameObjectID.WALL.ID, new Wall(GameObjectID.WALL.ID,"stg1_wall"));

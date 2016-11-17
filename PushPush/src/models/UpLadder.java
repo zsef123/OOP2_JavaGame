@@ -14,7 +14,7 @@ public class UpLadder extends GameObject {
 	public UpLadder(int tag, String name) throws SlickException {
 		super(tag, name);
 		// TODO Auto-generated constructor stub
-		upLadderImage=new Image("C:\\javaProject\\JavaModels\\ladder.png");
+		upLadderImage=new Image("C:\\javaProject\\JavaModels\\objects\\ladder.png");
 	}
 
 	@Override
