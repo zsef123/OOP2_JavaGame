@@ -11,9 +11,8 @@ import org.newdawn.slick.state.StateBasedGame;
 import gameStates.*;
 
 public class Main extends StateBasedGame {
-	// 나중에 변환 가능하게 바꾼다.
     public static int WIDTH   = 640;
-    public static int HEIGHT  = 480;
+    public static int HEIGHT  = 440;
     public static int FPS     = 60;
     
     public Main(String name) {
@@ -29,7 +28,6 @@ public class Main extends StateBasedGame {
 		this.addState(new Stage3(3));
 		this.addState(new Stage4(4));
 
-		// 이거 넣으면 오류난다
 		this.addState(new Ending(GameStateID.ENDING.ID));
 	}
 	public static void main(String[] args) {

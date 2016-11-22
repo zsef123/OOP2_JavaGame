@@ -1,11 +1,8 @@
 package gameStates;
 
-
+import java.awt.Font;
 import java.io.*;
-import java.util.EmptyStackException;
-import java.util.HashMap;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -14,14 +11,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import models.*;
-import controller.GameObjectID;
-import controller.GameStateID;
-import controller.PlayerMove;
-import controller.Ranking;
-import controller.Undo;
+import controller.*;
 public abstract class Stage extends BasicGameState {
 	StateBasedGame game;
 	GameContainer gc;
@@ -53,7 +48,7 @@ public abstract class Stage extends BasicGameState {
 	private Clock clock;
 	private Image[] clockImages;
 	private Animation[] clockSprites;
-	
+		
 	private PlayerMove move;
 	protected Ranking rank;
 	public Stage(int id) {
@@ -160,13 +155,20 @@ public abstract class Stage extends BasicGameState {
 		//해상도로 바꾼다
 		//bgImage.draw(0,0,640,480);
 		bgAnimation.draw();
-		g.drawString("Time : " + time/1000, 450, 50);
-		g.drawString("Move : " + moveCount , 450, 150);
-		g.drawString("Reset : " + resetCount , 450, 200);
-		g.drawString("Cnt : " + targetCount , 450, 250);
+		//font start
+		Font font=new Font("Tempus Sans ITC",Font.BOLD,24);
+		TrueTypeFont uniFont= new TrueTypeFont(font ,false);
+		g.setFont(uniFont);
+		g.drawString("Time", 470, 20);
+		g.drawString("Move : " + moveCount+"\n" , 450, 150);
+		g.drawString("Reset : " + resetCount+"\n" , 450, 220);
+		g.drawString("Cnt : " + targetCount , 450, 290);		
+		//font end
+		
 		mapRender(21,21);
 		UIRender(400,50);
 		((Player) objs.get(1)).getAnimation().draw(playerPosX*21+10, playerPosY*21+5);
+		//((Player) objs.get(1)).testGetAni().draw(playerPosX*21+10, playerPosY*21+5);
 	}
 
 	@Override
@@ -211,15 +213,19 @@ public abstract class Stage extends BasicGameState {
 		switch(key) {
 		case Input.KEY_LEFT:			
 			// game ending count
+			((Player) objs.get(1)).setDirection(2);
 			collisionID=move.leftMove(map);
 			break;
 		case Input.KEY_RIGHT:
+			((Player) objs.get(1)).setDirection(3);
 			collisionID=move.rightMove(map);
 			break;
 		case Input.KEY_UP:
+			((Player) objs.get(1)).setDirection(1);
 			collisionID=move.upMove(map);
 			break;
 		case Input.KEY_DOWN:
+			((Player) objs.get(1)).setDirection(0);
 			collisionID=move.downMove(map);
 			break;
 		}

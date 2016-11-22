@@ -1,6 +1,7 @@
 package gameStates;
 
 import org.newdawn.slick.Animation;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -29,7 +30,6 @@ public class Title extends BasicGameState {
 		// change image
 		sp= new SpriteSheet("C:\\javaProject\\JavaModels\\Title_Backgroud_Image2.png",640,480);
 		this.ani=new Animation(sp,100);
-		
 	}
 
 	@Override
