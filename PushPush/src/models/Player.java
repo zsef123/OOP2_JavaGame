@@ -7,6 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 import controller.CustomAnimation;
+import controller.Direction;
 
 public class Player extends GameObject {
 	protected Image playerImage;
@@ -40,8 +41,8 @@ public class Player extends GameObject {
 		
 		testAni=new CustomAnimation("C:\\javaProject\\JavaModels\\objects\\player2.png",16,16,3,10);
 	}
-	public void setDirection(int direction) {
-		this.direction=direction;
+	public void setDirection(Direction direction) {
+		this.direction=direction.ID;
 	}
 	@Override
 	public Image getImage() {

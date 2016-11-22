@@ -2,9 +2,6 @@ package controller;
 
 import org.newdawn.slick.Input;
 
-import gameStates.Stage;
-import models.GameObject;
-
 public class PlayerMove {
 	private int key;
 	private int targetCount;
@@ -19,8 +16,10 @@ public class PlayerMove {
 	
 	private int moveCount;
 	
+	private AudioPlayer audio;
 	// make singleton class uses holder idiom
 	private PlayerMove() {
+		audio=AudioPlayer.getInstance();
 	}
 	private static class SingletonMove {
 		private static final PlayerMove instance = new PlayerMove();
@@ -63,6 +62,7 @@ public class PlayerMove {
 		teleportPosY=y;
 	}
 	private void moveToTeleport() {
+		audio.teleportSoundPlayAtOnce();
 		posX=teleportPosX;
 		posY=teleportPosY;
 	}
@@ -76,10 +76,11 @@ public class PlayerMove {
 			break;
 		case BALL: case FILLEDTARGET:
 			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX-2] );
+			audio.tickPlayAtOnce();
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET) {
+				audio.tickPlayAtOnce();
 				posX--; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY][posX-1]+=GameObjectID.BALL.ID;
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
@@ -89,10 +90,10 @@ public class PlayerMove {
 			break;
 		case BALL2: case FILLEDTARGET2:
 			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX-2] );
+			audio.tickPlayAtOnce();
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
 				posX--; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL2.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY][posX-1]+=GameObjectID.BALL2.ID;
 				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
 					targetCount++;	
@@ -102,10 +103,10 @@ public class PlayerMove {
 			break;
 		case BALL3: case FILLEDTARGET3:
 			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX-2] );
+			audio.tickPlayAtOnce();
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
 				posX--; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL3.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY][posX-1]+=GameObjectID.BALL3.ID;
 				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
 					targetCount++;	
@@ -139,10 +140,10 @@ public class PlayerMove {
 			break;
 		case BALL: case FILLEDTARGET:
 			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX+2] );
+			audio.tickPlayAtOnce();
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET) {
 				posX++; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY][posX+1]+=GameObjectID.BALL.ID;
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
@@ -151,11 +152,11 @@ public class PlayerMove {
 			}
 			break;
 		case BALL2: case FILLEDTARGET2:
+			audio.tickPlayAtOnce();
 			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX+2] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
 				posX++; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL2.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY][posX+1]+=GameObjectID.BALL2.ID;
 				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
 					targetCount++;	
@@ -164,11 +165,11 @@ public class PlayerMove {
 			}
 			break;
 		case BALL3: case FILLEDTARGET3:
+			audio.tickPlayAtOnce();
 			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX+2] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
 				posX++; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL3.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY][posX+1]+=GameObjectID.BALL3.ID;
 				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
 					targetCount++;	
@@ -198,11 +199,11 @@ public class PlayerMove {
 			posY--; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
+			audio.tickPlayAtOnce();
 			collisionWithBallID =  GameObjectID.fromInt( map[posY-2][posX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET) {
 				posY--; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY-1][posX]+=GameObjectID.BALL.ID;
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
@@ -211,11 +212,11 @@ public class PlayerMove {
 			}
 			break;
 		case BALL2: case FILLEDTARGET2:
+			audio.tickPlayAtOnce();
 			collisionWithBallID =  GameObjectID.fromInt( map[posY-2][posX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
 				posY--; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL2.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY-1][posY]+=GameObjectID.BALL2.ID;
 				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
 					targetCount++;	
@@ -224,11 +225,11 @@ public class PlayerMove {
 			}
 			break;
 		case BALL3: case FILLEDTARGET3:
+			audio.tickPlayAtOnce();
 			collisionWithBallID =  GameObjectID.fromInt( map[posY-2][posX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
 				posY--; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL3.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY-1][posY]+=GameObjectID.BALL3.ID;
 				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
 					targetCount++;	
@@ -258,11 +259,11 @@ public class PlayerMove {
 			posY++; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
+			audio.tickPlayAtOnce();
 			collisionWithBallID =  GameObjectID.fromInt( map[posY+2][posX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET) {
 				posY++; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY+1][posX]+=GameObjectID.BALL.ID;
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
@@ -271,11 +272,11 @@ public class PlayerMove {
 			}
 			break;
 		case BALL2: case FILLEDTARGET2:
+			audio.tickPlayAtOnce();
 			collisionWithBallID =  GameObjectID.fromInt( map[posY+2][posX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
 				posY++; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL2.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY+1][posX]+=GameObjectID.BALL2.ID;
 				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
 					targetCount++;	
@@ -284,11 +285,11 @@ public class PlayerMove {
 			}
 			break;
 		case BALL3: case FILLEDTARGET3:
+			audio.tickPlayAtOnce();
 			collisionWithBallID =  GameObjectID.fromInt( map[posY+2][posX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
 				posY++; moveCount++;
 				map[posY][posX]-=GameObjectID.BALL3.ID;
-				// 공을 밀고 값을 안바꾸잖아.
 				map[posY+1][posX]+=GameObjectID.BALL3.ID;
 				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
 					targetCount++;	

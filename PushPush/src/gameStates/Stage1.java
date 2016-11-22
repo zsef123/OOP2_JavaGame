@@ -1,17 +1,22 @@
 package gameStates;
 
-import java.io.*;
 import java.util.HashMap;
-import java.util.Vector;
+
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.*;
 
+import controller.CrossFadeTransition;
 import controller.GameObjectID;
 import controller.GameStateID;
-import models.*;
+import controller.splitByPixelTransition;
+import models.Ball;
+import models.GameObject;
+import models.Player;
+import models.Target;
+import models.Target2;
+import models.Wall;
 public class Stage1 extends Stage {
 	public Stage1(int id) {
 		super(id);
@@ -46,9 +51,9 @@ public class Stage1 extends Stage {
 		
 		((Player) objs.get(1)).getAnimation().update(delta);
 		if ( targetCount== maxTargetCount && targetCount > 0 ) {
-
 			rank.appendScore(time/1000,moveCount);
-			game.enterState(2);
+			allInit();
+			game.enterState(2, new splitByPixelTransition() ,null);
 		}
 		if ( resetCount == 0) {
 			rank.appendScore(time/1000,moveCount);

@@ -1,7 +1,13 @@
 package controller;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Vector;
 
 public class Ranking {
 	private FileWriter rankFile;
@@ -24,7 +30,7 @@ public class Ranking {
 	
 	private int allTime;
 	private int allMove;
-
+	private int clearStage;
 	private Ranking() {
 		try {
 			rankFile = new FileWriter("C:\\javaProject\\JavaModels\\ranking.txt", true);
@@ -53,6 +59,7 @@ public class Ranking {
 		for (int[] sc : score) {
 			allTime += sc[0];
 			allMove += sc[1];
+			clearStage++;
 		}
 	}
 
@@ -60,7 +67,8 @@ public class Ranking {
 		// TODO Auto-generated method stub
 		getScore();
 		System.out.println("allTime:" + allTime);
-		String input = nickName + "\t" + Integer.toString(allTime) + "\r\n";
+		int finalScore = clearStage*500 - allMove*2 - allTime;  
+		String input = nickName + "\t" + Integer.toString(finalScore) + "\r\n";
 		try {
 			rankFile.write(input);
 			rankFile.close();

@@ -3,14 +3,18 @@ package gameStates;
 import java.util.HashMap;
 
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import controller.CrossFadeTransition;
 import controller.GameObjectID;
 import controller.GameStateID;
-
-import models.*;
+import models.Ball;
+import models.GameObject;
+import models.Player;
+import models.Target;
+import models.UpLadder;
+import models.Wall;
 
 public class Stage4 extends Stage {
 
@@ -42,7 +46,8 @@ public class Stage4 extends Stage {
 		// TODO Auto-generated method stub
 		time+=delta;
 		if ( targetCount== maxTargetCount && targetCount > 0 ) {
-			game.enterState(GameStateID.ENDING.ID);
+			allInit();
+			game.enterState(5, new CrossFadeTransition(450),null);
 		}
 		if ( resetCount == 0) {
 			game.enterState(GameStateID.ENDING.ID);

@@ -1,21 +1,14 @@
 package gameStates;
 
-import java.util.*;
+import java.util.Vector;
 
-import org.lwjgl.input.Mouse;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.*;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import controller.GameStateID;
+import controller.Main;
 import controller.Ranking;
 import controller.Ranking.RankEle;
 
@@ -23,21 +16,25 @@ public class Ending extends BasicGameState {
 	StateBasedGame game;
 	GameContainer gc;
 	
-	private Image img;
+	private SpriteSheet bgSprite;
+	private Animation ani;
 	protected int ID=GameStateID.ENDING.ID;
 	
 	Font font;
 	private TextField inputNickname;
 	private Image inputButton;
+	private Image cancelButton;
 	private Ranking rank;
 	private String rankList;
 	public Ending(int id) throws SlickException {
 		// TODO Auto-generated constructor stub
 		this.ID = id;
 		System.out.println("ENDING ID:"+ID);
-		// change image
-		this.img=new Image("C:\\javaProject\\JavaModels\\Ending_Backgroud_Image.png");
+
+		bgSprite=new SpriteSheet("C:\\javaProject\\JavaModels\\Ending_Background_Image.png",Main.WIDTH,Main.HEIGHT);
+		ani= new Animation(bgSprite,200);
 		inputButton=new Image("C:\\javaProject\\JavaModels\\inputButton.png");
+		cancelButton=new Image("C:\\javaProject\\JavaModels\\cancelButton.png");
 		rankList="";
 	}
 
@@ -50,17 +47,25 @@ public class Ending extends BasicGameState {
 		rank=Ranking.getInstance();
 		font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		//이것도 다 변수화 해야 밑에거 맞출수 있다.
-		inputNickname= new TextField(gc, font, 50,50, 200, 50);
+		inputNickname= new TextField(gc, font, 100,120, 200, 50);
 		inputNickname.setCursorVisible(true);
+		inputNickname.setFocus(false);
 		inputNickname.setMaxLength(5);
+		inputNickname.setBorderColor(Color.red);
+	}
+
+	@Override
+	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		inputNickname.setFocus(true);
 	}
 	private String rankRender() {
 		Vector<RankEle> rankMap=rank.getRankFile();
 		String line="Name\tScore\n";
+		int i=0;
 		for (RankEle e: rankMap ) {
 			line+= e.name+"\t"+ Integer.toString(e.score)+"\n";
-		}
-		
+			if (i++==9) break;
+		}		
 		System.out.println(line);
 		return line;
 	}
@@ -68,11 +73,14 @@ public class Ending extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		// TODO Auto-generated method stub
-		g.drawImage(img,0,0);
+		ani.draw();
 		inputNickname.render(gc, g);
 		//얘도 변수화
-		g.drawImage(inputButton,50,200);
+		g.drawImage(inputButton,70,200);
+		g.drawImage(cancelButton,170,200);
 		g.drawString(rankList, 500, 50);
+		// mouse cursor
+		
 	}
 
 	@Override

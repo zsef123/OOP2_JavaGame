@@ -1,18 +1,23 @@
 package gameStates;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import controller.CrossFadeTransition;
 import controller.GameObjectID;
 import controller.GameStateID;
-import models.*;
+import models.Ball;
+import models.GameObject;
+import models.Player;
+import models.Target;
+import models.Target2;
+import models.Target3;
+import models.TeleportIn;
+import models.TeleportOut;
+import models.Wall;
 
 public class Stage3 extends Stage {
 
@@ -50,7 +55,8 @@ public class Stage3 extends Stage {
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		time+=delta;
 		if ( targetCount== maxTargetCount && targetCount > 0 ) {
-			game.enterState(4);
+			allInit();
+			game.enterState(4, new CrossFadeTransition(450),null);
 		}
 		if ( resetCount == 0) {
 			game.enterState(GameStateID.ENDING.ID);

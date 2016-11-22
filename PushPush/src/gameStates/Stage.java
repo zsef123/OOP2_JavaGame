@@ -1,10 +1,15 @@
 package gameStates;
 
 import java.awt.Font;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.EmptyStackException;
+import java.util.HashMap;
+import java.util.Stack;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,19 +17,22 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-import models.*;
+
 import controller.*;
+import models.*;
+
 public abstract class Stage extends BasicGameState {
 	StateBasedGame game;
 	GameContainer gc;
 	protected int ID;
+	// for option
+	protected static int currentStageID;
 	protected int stageIndex;
-	protected static Image bgImage;
-	protected static SpriteSheet bgSprite;
-	protected static Animation bgAnimation;
+	protected Image bgImage;
+	protected SpriteSheet bgSprite;
+	protected Animation bgAnimation;
 	protected HashMap<Integer,GameObject> objs;
 	protected String fileDir="C:\\javaProject\\JavaModels\\Stages\\";
 	// 그려줄 맵
@@ -39,7 +47,6 @@ public abstract class Stage extends BasicGameState {
 	protected int getUndoIndex;
 	protected int playerPosX;
 	protected int playerPosY;
-	private int saveMapValue;
 	
 	public int[][] map;
 	public final int mapWidth=20;
@@ -48,7 +55,10 @@ public abstract class Stage extends BasicGameState {
 	private Clock clock;
 	private Image[] clockImages;
 	private Animation[] clockSprites;
-		
+	
+	private Font font;
+	private TrueTypeFont uniFont;
+	
 	private PlayerMove move;
 	protected Ranking rank;
 	public Stage(int id) {
@@ -63,8 +73,8 @@ public abstract class Stage extends BasicGameState {
 	@Override
 	abstract public void init(GameContainer gc, StateBasedGame sbg) throws SlickException;
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		mapInit();
-		moveInit();
+		currentStageID=this.ID;
+
 	}
 	public void leave(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
@@ -85,7 +95,7 @@ public abstract class Stage extends BasicGameState {
 		// TODO Auto-generated method stub
 		try {
 			bgImage=new Image("C:\\javaProject\\JavaModels\\Game_Background_Image.png");
-			bgSprite=new SpriteSheet("C:\\javaProject\\JavaModels\\Game_Background_Image2.png",640,480);
+			bgSprite=new SpriteSheet("C:\\javaProject\\JavaModels\\Game_Background_Image2.png",Main.WIDTH,Main.HEIGHT);
 			bgAnimation=new Animation(bgSprite, 100);
 		} catch (SlickException e1) {
 			// TODO Auto-generated catch block
@@ -125,6 +135,13 @@ public abstract class Stage extends BasicGameState {
 		undoStack=new Stack<Undo>();
 		clock = Clock.getInstance();
 		clockImages=clock.getFlip();
+		
+		font=new Font("Tempus Sans ITC",Font.PLAIN,26);
+		uniFont= new TrueTypeFont(font ,false);
+	}
+	protected void allInit() {
+		mapInit();
+		moveInit();
 	}
 	private void mapRender(int WidthPixel, int HeightPixel) {
 		for (int i=0;i<mapWidth; i++) {
@@ -146,7 +163,6 @@ public abstract class Stage extends BasicGameState {
 			clockSprites[i].draw(Width+51*i, Height);
 		}
 		clockImages=clock.getFlip();
-
 		
 	}
 	@Override
@@ -155,14 +171,11 @@ public abstract class Stage extends BasicGameState {
 		//해상도로 바꾼다
 		//bgImage.draw(0,0,640,480);
 		bgAnimation.draw();
-		//font start
-		Font font=new Font("Tempus Sans ITC",Font.BOLD,24);
-		TrueTypeFont uniFont= new TrueTypeFont(font ,false);
+		g.setColor(Color.white);
 		g.setFont(uniFont);
 		g.drawString("Time", 470, 20);
 		g.drawString("Move : " + moveCount+"\n" , 450, 150);
 		g.drawString("Reset : " + resetCount+"\n" , 450, 220);
-		g.drawString("Cnt : " + targetCount , 450, 290);		
 		//font end
 		
 		mapRender(21,21);
@@ -201,6 +214,10 @@ public abstract class Stage extends BasicGameState {
 			}
 			System.out.println("getundo:"+getUndoIndex);
 		}
+		else if (key==Input.KEY_ESCAPE) {
+			
+			game.enterState(GameStateID.PAUSE.ID, null, null);
+		}
 		else
 			playerMove(key);
 	}
@@ -213,19 +230,19 @@ public abstract class Stage extends BasicGameState {
 		switch(key) {
 		case Input.KEY_LEFT:			
 			// game ending count
-			((Player) objs.get(1)).setDirection(2);
+			((Player) objs.get(1)).setDirection(Direction.LEFT); // use enum
 			collisionID=move.leftMove(map);
 			break;
 		case Input.KEY_RIGHT:
-			((Player) objs.get(1)).setDirection(3);
+			((Player) objs.get(1)).setDirection(Direction.RIGHT);
 			collisionID=move.rightMove(map);
 			break;
 		case Input.KEY_UP:
-			((Player) objs.get(1)).setDirection(1);
+			((Player) objs.get(1)).setDirection(Direction.UP);
 			collisionID=move.upMove(map);
 			break;
 		case Input.KEY_DOWN:
-			((Player) objs.get(1)).setDirection(0);
+			((Player) objs.get(1)).setDirection(Direction.DOWN);
 			collisionID=move.downMove(map);
 			break;
 		}

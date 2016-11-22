@@ -3,7 +3,6 @@ package controller;
 import org.lwjgl.Sys;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import java.util.*;
 public class CustomAnimation {
 	private Image imgs;
 	private int imgWidth;

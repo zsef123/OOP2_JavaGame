@@ -1,22 +1,21 @@
 package gameStates;
 
 import org.newdawn.slick.Animation;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import controller.GameStateID;
+import controller.AudioPlayer;
+import controller.Main;
 
 public class Title extends BasicGameState {
 	StateBasedGame game;
 	GameContainer gc;
-	
+	private AudioPlayer audio;
 	private SpriteSheet sp;
 	private Animation ani;
 	
@@ -28,8 +27,9 @@ public class Title extends BasicGameState {
 		this.ID = id;
 		System.out.println("TITLE ID:"+ID);	
 		// change image
-		sp= new SpriteSheet("C:\\javaProject\\JavaModels\\Title_Backgroud_Image2.png",640,480);
+		sp= new SpriteSheet("C:\\javaProject\\JavaModels\\Title_Backgroud_Image2.png",Main.WIDTH,Main.HEIGHT);
 		this.ani=new Animation(sp,100);
+		audio=AudioPlayer.getInstance();
 	}
 
 	@Override
@@ -37,6 +37,7 @@ public class Title extends BasicGameState {
 		// TODO Auto-generated method stub
 		this.gc=gc;
 		this.game=sbg;
+		audio.bgmPlay(true);
 	}
 
 	@Override
@@ -61,13 +62,9 @@ public class Title extends BasicGameState {
 	public void keyReleased(int key, char c) {
 		switch(key) {
 		// Press any key 하면 전환되게
-		case Input.KEY_1:
+		case Input.KEY_SPACE:
 			// MainFrame으로
 			game.enterState(1);
-			break;
-		case Input.KEY_2:
-			// MainFrame으로
-			game.enterState(200);
 			break;
 		}
 	}

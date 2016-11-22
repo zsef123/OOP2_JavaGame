@@ -11,9 +11,9 @@ import org.newdawn.slick.state.StateBasedGame;
 import gameStates.*;
 
 public class Main extends StateBasedGame {
-    public static int WIDTH   = 640;
-    public static int HEIGHT  = 440;
-    public static int FPS     = 60;
+    public final static int WIDTH   = 640;
+    public final static int HEIGHT  = 440;
+    public final static int FPS     = 60;
     
     public Main(String name) {
 		super(name);
@@ -27,8 +27,8 @@ public class Main extends StateBasedGame {
 		this.addState(new Stage2(2));
 		this.addState(new Stage3(3));
 		this.addState(new Stage4(4));
-
 		this.addState(new Ending(GameStateID.ENDING.ID));
+		this.addState(new Pause(GameStateID.PAUSE.ID));
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
