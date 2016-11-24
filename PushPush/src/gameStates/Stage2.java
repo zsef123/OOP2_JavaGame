@@ -31,12 +31,14 @@ public class Stage2 extends Stage {
 		// TODO Auto-generated method stub
 		objs=new HashMap<Integer,GameObject>();
 		
-		objs.put(GameObjectID.WALL.ID, new Wall(GameObjectID.WALL.ID,"stg1_wall"));
-		objs.put(GameObjectID.PLAYER1.ID, new Player(GameObjectID.PLAYER1.ID,"stg1_player"));
-		objs.put(GameObjectID.BALL.ID, new Ball(GameObjectID.BALL.ID,"stg_ball"));
-		objs.put(GameObjectID.BALL2.ID, new Ball(GameObjectID.BALL2.ID,"stg_ball"));
-		objs.put(GameObjectID.TARGET.ID, new Target(GameObjectID.TARGET.ID,"stg1_target"));
-		objs.put(GameObjectID.FILLEDTARGET.ID, new Target(GameObjectID.FILLEDTARGET.ID,"stg1_filledtarget"));
+		objs.put(GameObjectID.WALL.ID, new Wall(GameObjectID.WALL.ID,"stg2_wall"));
+		objs.put(GameObjectID.PLAYER1.ID, new Player(GameObjectID.PLAYER1.ID,"stg2_player"));
+		
+		objs.put(GameObjectID.BALL.ID, new Ball(GameObjectID.BALL.ID,"stg2_ball"));
+		objs.put(GameObjectID.BALL2.ID, new Ball(GameObjectID.BALL2.ID,"stg2_ball"));
+		
+		objs.put(GameObjectID.TARGET.ID, new Target(GameObjectID.TARGET.ID,"stg2_target"));
+		objs.put(GameObjectID.FILLEDTARGET.ID, new Target(GameObjectID.FILLEDTARGET.ID,"stg2_filledtarget"));
 		objs.put(GameObjectID.TARGET2.ID, new Target2(GameObjectID.TARGET2.ID,"stg2_target2"));
 		objs.put(GameObjectID.FILLEDTARGET2.ID, new Target2(GameObjectID.FILLEDTARGET2.ID,"stg2_filledtarget2"));
 		// map[posY][posX]
@@ -45,14 +47,4 @@ public class Stage2 extends Stage {
 		moveInit();
 	}
 
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		time+=delta;
-		if ( targetCount== maxTargetCount && targetCount > 0) {
-			allInit()
-			;game.enterState(3, new CrossFadeTransition(450),null);
-		}
-		if ( resetCount == 0) {
-			game.enterState(GameStateID.ENDING.ID);
-		}
-	}
 }

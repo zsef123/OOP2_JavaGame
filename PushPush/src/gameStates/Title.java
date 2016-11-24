@@ -3,6 +3,7 @@ package gameStates;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -15,10 +16,13 @@ import controller.Main;
 public class Title extends BasicGameState {
 	StateBasedGame game;
 	GameContainer gc;
+	
 	private AudioPlayer audio;
+	
 	private SpriteSheet sp;
 	private Animation ani;
 	
+	private Image logo;
 	// 나중에 ID는 Enum으로 관리
 	protected int ID=0;
 	
@@ -26,9 +30,10 @@ public class Title extends BasicGameState {
 		// TODO Auto-generated constructor stub
 		this.ID = id;
 		System.out.println("TITLE ID:"+ID);	
-		// change image
-		sp= new SpriteSheet("C:\\javaProject\\JavaModels\\Title_Backgroud_Image2.png",Main.WIDTH,Main.HEIGHT);
-		this.ani=new Animation(sp,100);
+
+		logo=new Image("C:\\javaProject\\JavaModels\\logo.png");
+		sp= new SpriteSheet("C:\\javaProject\\JavaModels\\Title_Backgroud_Image3.png",Main.WIDTH,Main.HEIGHT);
+		this.ani=new Animation(sp,250);
 		audio=AudioPlayer.getInstance();
 	}
 
@@ -45,6 +50,7 @@ public class Title extends BasicGameState {
 		// TODO Auto-generated method stub
 		//g.drawImage(img, 0, 0);
 		ani.draw();
+		logo.draw();
 	}
 
 	@Override
@@ -66,6 +72,9 @@ public class Title extends BasicGameState {
 			// MainFrame으로
 			game.enterState(1);
 			break;
+		case Input.KEY_2:
+			game.enterState(51);
 		}
+		
 	}
 }

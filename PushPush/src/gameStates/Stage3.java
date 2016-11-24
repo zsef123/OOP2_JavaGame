@@ -34,33 +34,25 @@ public class Stage3 extends Stage {
 		// TODO Auto-generated method stub
 		objs=new HashMap<Integer,GameObject>();
 		
-		objs.put(GameObjectID.WALL.ID, new Wall(GameObjectID.WALL.ID,"stg1_wall"));
-		objs.put(GameObjectID.PLAYER1.ID, new Player(GameObjectID.PLAYER1.ID,"stg1_player"));
-		objs.put(GameObjectID.BALL.ID, new Ball(GameObjectID.BALL.ID,"stg_ball"));
-		objs.put(GameObjectID.BALL2.ID, new Ball(GameObjectID.BALL2.ID,"stg_ball"));
-		objs.put(GameObjectID.BALL3.ID, new Ball(GameObjectID.BALL3.ID,"stg_ball"));
-		objs.put(GameObjectID.TARGET.ID, new Target(GameObjectID.TARGET.ID,"stg1_target"));
-		objs.put(GameObjectID.FILLEDTARGET.ID, new Target(GameObjectID.FILLEDTARGET.ID,"stg1_filledtarget"));
-		objs.put(GameObjectID.TARGET2.ID, new Target2(GameObjectID.TARGET2.ID,"stg1_target"));
-		objs.put(GameObjectID.FILLEDTARGET2.ID, new Target2(GameObjectID.FILLEDTARGET2.ID,"stg1_filledtarget"));
-		objs.put(GameObjectID.TARGET3.ID, new Target3(GameObjectID.TARGET3.ID,"stg1_target"));
-		objs.put(GameObjectID.FILLEDTARGET3.ID, new Target3(GameObjectID.FILLEDTARGET3.ID,"stg1_filledtarget"));
-		objs.put(GameObjectID.TELEPORTIN.ID, new TeleportIn(GameObjectID.TELEPORTIN.ID,"stg1_TeleIn"));
-		objs.put(GameObjectID.TELEPORTOUT.ID, new TeleportOut(GameObjectID.TELEPORTOUT.ID,"stg1_TeleOut"));
-		// map[posY][posX]
+		objs.put(GameObjectID.WALL.ID, new Wall(GameObjectID.WALL.ID,"stg3_wall"));
+		objs.put(GameObjectID.PLAYER1.ID, new Player(GameObjectID.PLAYER1.ID,"stg3_player"));
+		
+		objs.put(GameObjectID.BALL.ID, new Ball(GameObjectID.BALL.ID,"stg3_ball"));
+		objs.put(GameObjectID.BALL2.ID, new Ball(GameObjectID.BALL2.ID,"stg3_ball"));
+		objs.put(GameObjectID.BALL3.ID, new Ball(GameObjectID.BALL3.ID,"stg3_ball"));
+		
+		objs.put(GameObjectID.TARGET.ID, new Target(GameObjectID.TARGET.ID,"stg3_target"));
+		objs.put(GameObjectID.FILLEDTARGET.ID, new Target(GameObjectID.FILLEDTARGET.ID,"stg3_filledtarget"));
+		objs.put(GameObjectID.TARGET2.ID, new Target2(GameObjectID.TARGET2.ID,"stg3_target"));
+		objs.put(GameObjectID.FILLEDTARGET2.ID, new Target2(GameObjectID.FILLEDTARGET2.ID,"stg3_filledtarget"));
+		objs.put(GameObjectID.TARGET3.ID, new Target3(GameObjectID.TARGET3.ID,"stg3_target"));
+		objs.put(GameObjectID.FILLEDTARGET3.ID, new Target3(GameObjectID.FILLEDTARGET3.ID,"stg3_filledtarget"));
+		
+		objs.put(GameObjectID.TELEPORTIN.ID, new TeleportIn(GameObjectID.TELEPORTIN.ID,"stg3_teleportin"));
+		objs.put(GameObjectID.TELEPORTOUT.ID, new TeleportOut(GameObjectID.TELEPORTOUT.ID,"stg3_teleportout"));
+		
 		mapInit();
 		moveInit();
-	}
-
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		time+=delta;
-		if ( targetCount== maxTargetCount && targetCount > 0 ) {
-			allInit();
-			game.enterState(4, new CrossFadeTransition(450),null);
-		}
-		if ( resetCount == 0) {
-			game.enterState(GameStateID.ENDING.ID);
-		}
 	}
 
 }

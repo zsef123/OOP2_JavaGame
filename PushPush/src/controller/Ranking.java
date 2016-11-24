@@ -68,7 +68,7 @@ public class Ranking {
 		getScore();
 		System.out.println("allTime:" + allTime);
 		int finalScore = clearStage*500 - allMove*2 - allTime;  
-		String input = nickName + "\t" + Integer.toString(finalScore) + "\r\n";
+		String input = nickName + "\t" + Integer.toString(finalScore) + "\n";
 		try {
 			rankFile.write(input);
 			rankFile.close();

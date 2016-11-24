@@ -8,10 +8,10 @@ import org.newdawn.slick.SpriteSheet;
 
 import controller.CustomAnimation;
 import controller.Direction;
+import controller.GameObjectID;
 
 public class Player extends GameObject {
-	protected Image playerImage;
-	protected SpriteSheet playerImage2[];
+	protected SpriteSheet playerImage[];
 	protected Animation playerAni[];
 	
 	protected CustomAnimation testAni;
@@ -28,26 +28,36 @@ public class Player extends GameObject {
 	public Player(int tag, String name) throws SlickException {
 		super(tag, name);
 		this.direction=0;
-		// TODO Auto-generated constructor stub
-		playerImage = new Image("C:\\javaProject\\JavaModels\\objects\\player.png");
-		playerImage2= new SpriteSheet[4];
-		playerImage2[0] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\playerDownSheet.png", IMGWIDTH, IMGHEIGHT);
-		playerImage2[1] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\playerUpSheet.png", IMGWIDTH, IMGHEIGHT);
-		playerImage2[2] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\playerLeftSheet.png", IMGWIDTH, IMGHEIGHT);
-		playerImage2[3] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\playerRightSheet.png", IMGWIDTH, IMGHEIGHT);
+		// TODO Auto-generated constructor stub		
+		playerImage= new SpriteSheet[4];
+		if (tag==GameObjectID.PLAYER1.ID) {
+			playerImage[0] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\playerDownSheet.png", IMGWIDTH, IMGHEIGHT);
+			playerImage[1] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\playerUpSheet.png", IMGWIDTH, IMGHEIGHT);
+			playerImage[2] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\playerLeftSheet.png", IMGWIDTH, IMGHEIGHT);
+			playerImage[3] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\playerRightSheet.png", IMGWIDTH, IMGHEIGHT);
+		}
+		else if (tag==GameObjectID.PLAYER2.ID) {
+			playerImage[0] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\player2DownSheet.png", IMGWIDTH, IMGHEIGHT);
+			playerImage[1] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\player2UpSheet.png", IMGWIDTH, IMGHEIGHT);
+			playerImage[2] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\player2LeftSheet.png", IMGWIDTH, IMGHEIGHT);
+			playerImage[3] = new SpriteSheet("C:\\javaProject\\JavaModels\\objects\\player2RightSheet.png", IMGWIDTH, IMGHEIGHT);
+		}
 		playerAni = new Animation[4];
 		for (int i=0;i<4;i++)
-			playerAni[i]=new Animation(playerImage2[i],1000);
+			playerAni[i]=new Animation(playerImage[i],1000);
 		
 		testAni=new CustomAnimation("C:\\javaProject\\JavaModels\\objects\\player2.png",16,16,3,10);
 	}
 	public void setDirection(Direction direction) {
 		this.direction=direction.ID;
 	}
+	public int getDirectionInt() {
+		return direction;
+	}
 	@Override
 	public Image getImage() {
 		// TODO Auto-generated method stub
-		return playerImage;
+		return null;
 	}
 	public Animation getAnimation() {
 		return playerAni[direction];
@@ -59,7 +69,8 @@ public class Player extends GameObject {
 	@Override
 	public void setPos(int x, int y) {
 		// TODO Auto-generated method stub
-		
+		this.posX=x;
+		this.posY=y;
 	}
 
 }

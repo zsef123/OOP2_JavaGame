@@ -1,16 +1,16 @@
 package gameStates;
 
 import java.util.Vector;
+import java.awt.Font;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import controller.GameStateID;
-import controller.Main;
-import controller.Ranking;
+import controller.*;
 import controller.Ranking.RankEle;
+import models.Player;
 
 public class Ending extends BasicGameState {
 	StateBasedGame game;
@@ -20,12 +20,19 @@ public class Ending extends BasicGameState {
 	private Animation ani;
 	protected int ID=GameStateID.ENDING.ID;
 	
-	Font font;
+	private Player backGroundChar[];
+	private Font font;
+	private TrueTypeFont ttFont;
 	private TextField inputNickname;
 	private Image inputButton;
+	private Image inputButtonNormal;
+	private Image inputButtonOnClick;
+	private Image cancelButtonNormal;
+	private Image cancelButtonOnClick;
 	private Image cancelButton;
 	private Ranking rank;
 	private String rankList;
+	
 	public Ending(int id) throws SlickException {
 		// TODO Auto-generated constructor stub
 		this.ID = id;
@@ -33,9 +40,27 @@ public class Ending extends BasicGameState {
 
 		bgSprite=new SpriteSheet("C:\\javaProject\\JavaModels\\Ending_Background_Image.png",Main.WIDTH,Main.HEIGHT);
 		ani= new Animation(bgSprite,200);
-		inputButton=new Image("C:\\javaProject\\JavaModels\\inputButton.png");
-		cancelButton=new Image("C:\\javaProject\\JavaModels\\cancelButton.png");
+		
+		inputButtonNormal=new Image("C:\\javaProject\\JavaModels\\inputButton.png");
+		inputButtonOnClick=new Image("C:\\javaProject\\JavaModels\\inputButtonOnClick.png");
+		inputButton=inputButtonNormal;
+		
+		cancelButtonNormal=new Image("C:\\javaProject\\JavaModels\\cancelButton.png");
+		cancelButtonOnClick=new Image("C:\\javaProject\\JavaModels\\cancelButtonOnClick.png");
+		cancelButton=cancelButtonNormal;
+		
 		rankList="";
+		backGroundChar= new Player[20];
+		for ( int i=0;i<20;i++) {
+			int j=1;
+			if( i%2 ==0 ) j=11;
+			backGroundChar[i]=new Player(j,"Ending_background");
+			int direction = (int) (Math.random()*3) ;
+			backGroundChar[i].setDirection(Direction.fromInt(direction));
+			int randomPosX = (int)(Math.random()*Main.WIDTH);
+			int randomPosY = (int)(Math.random()*Main.HEIGHT);
+			backGroundChar[i].setPos( randomPosX, randomPosY);
+		}
 	}
 
 	@Override
@@ -45,18 +70,19 @@ public class Ending extends BasicGameState {
 		this.game=sbg;
 		
 		rank=Ranking.getInstance();
-		font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
-		//이것도 다 변수화 해야 밑에거 맞출수 있다.
-		inputNickname= new TextField(gc, font, 100,120, 200, 50);
-		inputNickname.setCursorVisible(true);
+
+		font= new Font("모리스9", Font.BOLD, 24);
+		ttFont = new TrueTypeFont(font , false);
+		inputNickname= new TextField(gc, ttFont, 100,120, 140, 50);
 		inputNickname.setFocus(false);
-		inputNickname.setMaxLength(5);
-		inputNickname.setBorderColor(Color.red);
 	}
 
 	@Override
-	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {			
 		inputNickname.setFocus(true);
+		inputNickname.setCursorVisible(true);
+		inputNickname.setMaxLength(5);
+		inputNickname.setBorderColor(Color.red);
 	}
 	private String rankRender() {
 		Vector<RankEle> rankMap=rank.getRankFile();
@@ -70,17 +96,69 @@ public class Ending extends BasicGameState {
 		return line;
 	}
 
+	private void drawStringByLine(Graphics g, String text, int x, int y) {
+        for (String line : text.split("\n")) {
+        	g.setColor(new Color(77,193,241));
+        	for (String str : line.split("\t")) {
+                g.drawString(str, x, y);
+                x+=100;
+                g.setColor(new Color(244,219,160));
+        	}
+        	x-=200;
+        	y+=30;
+        }
+    }
+	public void backGroundPlayerMoveRender() {
+		for (int i=0;i<20;i++) {
+			int x= backGroundChar[i].getX();
+			int y= backGroundChar[i].getY();
+			backGroundChar[i].getAnimation().draw(x, y);;
+			Direction dir= Direction.fromInt(backGroundChar[i].getDirectionInt());
+			switch(dir) {
+			case DOWN:
+				if ( y > Main.HEIGHT) 
+					y=(int)(Math.random()*Main.HEIGHT);
+				backGroundChar[i].setPos(x, y+1);
+				break;
+			case UP:
+				if ( y < 0)
+					y=(int)(Math.random()*Main.HEIGHT);
+				backGroundChar[i].setPos(x, y-1);
+				break;
+			case LEFT:
+				if ( x < 0 )
+					x= (int)(Math.random()*Main.WIDTH);
+				backGroundChar[i].setPos(x-1, y);
+				break;
+			case RIGHT:
+				if ( x > Main.WIDTH) 
+					x= (int)(Math.random()*Main.WIDTH);
+				backGroundChar[i].setPos(x+1, y);
+				break;
+			}
+		}
+	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		// TODO Auto-generated method stub
+		g.setColor(Color.white);
+		g.setFont(ttFont);
 		ani.draw();
 		inputNickname.render(gc, g);
 		//얘도 변수화
 		g.drawImage(inputButton,70,200);
 		g.drawImage(cancelButton,170,200);
-		g.drawString(rankList, 500, 50);
-		// mouse cursor
 		
+		drawStringByLine(g,rankList,370,115);
+		
+		backGroundPlayerMoveRender();
+		//g.drawString(rankList, 420, 135);
+		// mouse cursor
+		Input in=gc.getInput();
+		int xpos=in.getMouseX();
+		int ypos=in.getMouseY();
+		g.drawString(Integer.toString(xpos), 10, 20);
+		g.drawString(Integer.toString(ypos), 10, 40);
 	}
 
 	@Override
@@ -89,15 +167,37 @@ public class Ending extends BasicGameState {
 			
 	}
 	@Override
-	public void mouseClicked(int button, int x, int y, int clickCount) {
-		if ( (x > 200 && x < 400 )
-			&& (y > 200 && y < 250 ) ) {
+	public void mousePressed(int button, int x, int y) {
+		
+		if ( (x > 82 && x < 146 ) && (y > 218 && y < 284 ) ) {
 			if (button == Input.MOUSE_LEFT_BUTTON ) {
 				String nickName= inputNickname.getText();
 				System.out.println("button click");
 				rank.writeRank(nickName);
 				rankList=rankRender();
+				inputButton=inputButtonOnClick;
 			}
+		}
+		else if ( (x > 192 && x < 246 ) && (y > 219 && y < 275 ) ) {
+			if (button == Input.MOUSE_LEFT_BUTTON ) {
+					inputNickname.setText("");
+					System.out.println("cancel click");
+					cancelButton=cancelButtonOnClick;
+				}	
+		}
+		
+	}
+	@Override
+	public void mouseReleased(int button, int x,int y) {
+		if ( (x > 82 && x < 146 ) && (y > 218 && y < 284 ) ) {
+				if (button == Input.MOUSE_LEFT_BUTTON ) {
+					inputButton=inputButtonNormal;
+				}
+			}
+		else if ( (x > 192 && x < 246 ) && (y > 219 && y < 275 ) ) {
+			if (button == Input.MOUSE_LEFT_BUTTON ) {
+					cancelButton=cancelButtonNormal;
+				}	
 		}
 	}
 	@Override

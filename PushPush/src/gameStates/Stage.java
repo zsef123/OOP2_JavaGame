@@ -27,6 +27,8 @@ public abstract class Stage extends BasicGameState {
 	StateBasedGame game;
 	GameContainer gc;
 	protected int ID;
+	protected final int FINISHED=5;
+	protected final int FINISHED2=52;
 	// for option
 	protected static int currentStageID;
 	protected int stageIndex;
@@ -47,6 +49,9 @@ public abstract class Stage extends BasicGameState {
 	protected int getUndoIndex;
 	protected int playerPosX;
 	protected int playerPosY;
+	
+	protected int player2PosX;
+	protected int player2PosY;
 	
 	public int[][] map;
 	public final int mapWidth=20;
@@ -74,7 +79,6 @@ public abstract class Stage extends BasicGameState {
 	abstract public void init(GameContainer gc, StateBasedGame sbg) throws SlickException;
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		currentStageID=this.ID;
-
 	}
 	public void leave(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
@@ -87,6 +91,7 @@ public abstract class Stage extends BasicGameState {
 		move.setZeroTargetCount();
 		
 		move.setPos(playerPosX, playerPosY);
+		move.setPos2(player2PosX, player2PosY);
 		if ( objs.get(GameObjectID.TELEPORTOUT.ID) != null ) {
 			move.setTeleportPos(objs.get(GameObjectID.TELEPORTOUT.ID).posX, objs.get(GameObjectID.TELEPORTOUT.ID).posY);
 		}
@@ -105,6 +110,7 @@ public abstract class Stage extends BasicGameState {
 		maxTargetCount=0;
 		map=new int[mapWidth][mapHeight];
 		try {
+			// Stage(ID).txt
 			String fileName=fileDir+"Stage"+Integer.toString(ID)+".txt";
 			BufferedReader br = new BufferedReader(new FileReader(fileName));
 			for( int i=0; i<mapWidth;i++) {
@@ -113,9 +119,14 @@ public abstract class Stage extends BasicGameState {
 				String[] lineSplit= line.split("\t");
 				for( int j=0;j<mapHeight; j++) {
 					map[i][j] = Integer.parseInt(lineSplit[j]) ;
-					if ( map[i][j] == 1 ) {
+					if ( map[i][j] == GameObjectID.PLAYER1.ID ) {
 						playerPosX=j;
 						playerPosY=i;
+						map[i][j]=0;
+					}
+					else if ( map[i][j] == GameObjectID.PLAYER2.ID ) {
+						player2PosX=j;
+						player2PosY=i;
 						map[i][j]=0;
 					}
 					else if (map[i][j] == GameObjectID.TARGET.ID || map[i][j] == GameObjectID.TARGET2.ID 
@@ -168,24 +179,40 @@ public abstract class Stage extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		// TODO Auto-generated method stub
-		//해상도로 바꾼다
-		//bgImage.draw(0,0,640,480);
+		
 		bgAnimation.draw();
 		g.setColor(Color.white);
 		g.setFont(uniFont);
 		g.drawString("Time", 470, 20);
 		g.drawString("Move : " + moveCount+"\n" , 450, 150);
 		g.drawString("Reset : " + resetCount+"\n" , 450, 220);
-		//font end
 		
 		mapRender(21,21);
 		UIRender(400,50);
-		((Player) objs.get(1)).getAnimation().draw(playerPosX*21+10, playerPosY*21+5);
-		//((Player) objs.get(1)).testGetAni().draw(playerPosX*21+10, playerPosY*21+5);
+		((Player) objs.get(GameObjectID.PLAYER1.ID)).getAnimation().draw(playerPosX*21+10, playerPosY*21+5);
+		if ( this.ID > 50)
+			((Player) objs.get(GameObjectID.PLAYER2.ID)).getAnimation().draw(player2PosX*21+10, player2PosY*21+5);
 	}
 
-	@Override
-	public abstract void update(GameContainer gc, StateBasedGame sbg, int arg2) throws SlickException;
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		time+=delta;
+		
+		((Player) objs.get(GameObjectID.PLAYER1.ID)).getAnimation().update(delta);
+		if (this.ID > 50)
+			((Player) objs.get(GameObjectID.PLAYER2.ID)).getAnimation().update(delta);
+		if ( targetCount== maxTargetCount && targetCount > 0 ) {
+			rank.appendScore(time/1000,moveCount);
+			allInit();
+			if ( ID+1 == FINISHED || ID+1== FINISHED2) // only player 1 end, player 2 end 
+				resetCount=0;
+			else
+				game.enterState(ID+1, new splitByPixelTransition(),null);
+		}
+		if ( resetCount == 0) {
+			rank.appendScore(time/1000,moveCount);
+			game.enterState(GameStateID.ENDING.ID,new CrossFadeTransition(450),null );
+		}
+	}
 	private void doUndo(Undo undo) {
 		playerPosX=undo.getX();
 		playerPosY=undo.getY();
@@ -197,9 +224,7 @@ public abstract class Stage extends BasicGameState {
 		System.out.println("Key:"+code+","+key);
 		System.out.println("cnt:"+targetCount+" maxcnt:"+maxTargetCount);
 		if (code == 'r') {
-			// reset
 			System.out.println("reset:"+resetCount);
-			// 왜 마이너스가 안될까
 			resetCount--;
 			moveCount=move.setZeroMoveCount();
 			targetCount=move.setZeroTargetCount();
@@ -222,37 +247,58 @@ public abstract class Stage extends BasicGameState {
 			playerMove(key);
 	}
 	private void playerMove(int key) {
-		// end
-		// how to remove trash move
 		undoStack.push(new Undo(playerPosX, playerPosY, targetCount , map));
 		move.setPos(playerPosX, playerPosY);
 		int collisionID = 0;
 		switch(key) {
 		case Input.KEY_LEFT:			
 			// game ending count
-			((Player) objs.get(1)).setDirection(Direction.LEFT); // use enum
-			collisionID=move.leftMove(map);
+			((Player) objs.get(GameObjectID.PLAYER1.ID)).setDirection(Direction.LEFT); // use enum
+			collisionID=move.leftMove(map, GameObjectID.PLAYER1.ID);
 			break;
 		case Input.KEY_RIGHT:
-			((Player) objs.get(1)).setDirection(Direction.RIGHT);
-			collisionID=move.rightMove(map);
+			((Player) objs.get(GameObjectID.PLAYER1.ID)).setDirection(Direction.RIGHT);
+			collisionID=move.rightMove(map, GameObjectID.PLAYER1.ID);
 			break;
 		case Input.KEY_UP:
-			((Player) objs.get(1)).setDirection(Direction.UP);
-			collisionID=move.upMove(map);
+			((Player) objs.get(GameObjectID.PLAYER1.ID)).setDirection(Direction.UP);
+			collisionID=move.upMove(map, GameObjectID.PLAYER1.ID);
 			break;
 		case Input.KEY_DOWN:
-			((Player) objs.get(1)).setDirection(Direction.DOWN);
-			collisionID=move.downMove(map);
+			((Player) objs.get(GameObjectID.PLAYER1.ID)).setDirection(Direction.DOWN);
+			collisionID=move.downMove(map, GameObjectID.PLAYER1.ID);
 			break;
 		}
-		targetCount=move.getTargetCount();
-		moveCount=move.getMoveCount();
+		// case only 2 player use
+		if( this.ID > 50 ) {
+			move.setPos2(player2PosX, player2PosY);
+			switch(key) {
+			case Input.KEY_A:
+				((Player) objs.get(GameObjectID.PLAYER2.ID)).setDirection(Direction.LEFT);
+				collisionID=move.leftMove(map, GameObjectID.PLAYER2.ID);
+				break;
+			case Input.KEY_D:
+				((Player) objs.get(GameObjectID.PLAYER2.ID)).setDirection(Direction.RIGHT);
+				collisionID=move.rightMove(map, GameObjectID.PLAYER2.ID);
+				break;
+			case Input.KEY_W:
+				((Player) objs.get(GameObjectID.PLAYER2.ID)).setDirection(Direction.UP);
+				collisionID=move.upMove(map, GameObjectID.PLAYER2.ID);
+				break;
+			case Input.KEY_S:
+				((Player) objs.get(GameObjectID.PLAYER2.ID)).setDirection(Direction.DOWN);
+				collisionID=move.downMove(map, GameObjectID.PLAYER2.ID);
+				break;
+			}
+
+			player2PosX=move.get2X();
+			player2PosY=move.get2Y();
+		}
+
 		playerPosX=move.getX();
 		playerPosY=move.getY();
-
-		//only case if collisionID is items
-		
+		targetCount=move.getTargetCount();
+		moveCount=move.getMoveCount();
 	}
 	@Override
 	public int getID() {

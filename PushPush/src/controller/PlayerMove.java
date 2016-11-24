@@ -7,6 +7,9 @@ public class PlayerMove {
 	private int targetCount;
 	private int posX;
 	private int posY;
+
+	private int pos2X;
+	private int pos2Y;
 	
 	private GameObjectID collisionID;
 	private GameObjectID collisionWithBallID;
@@ -50,38 +53,65 @@ public class PlayerMove {
 		posX=x;
 		posY=y;
 	}
+	public void setPos2(int x, int y) {
+		pos2X=x;
+		pos2Y=y;
+	}
 	public int getX() {
 		return posX;
 	}
 	public int getY() {
 		return posY;
 	}
+	public int get2X() {
+		return pos2X;
+	}
+	public int get2Y() {
+		return pos2Y;
+	}
+	
 	public void setTeleportPos(int x, int y) {
 		// imposible many teleport
 		teleportPosX=x;
 		teleportPosY=y;
 	}
-	private void moveToTeleport() {
+	private void moveToTeleport(int id) {
 		audio.teleportSoundPlayAtOnce();
-		posX=teleportPosX;
-		posY=teleportPosY;
+		if (id==GameObjectID.PLAYER1.ID) {
+			posX=teleportPosX;
+			posY=teleportPosY;
+		}
+		else if ( id == GameObjectID.PLAYER2.ID) {
+			pos2X=teleportPosX;
+			pos2Y=teleportPosY;
+		}
 	}
 	
-	public int leftMove(int[][] map ) {
-		collisionID = GameObjectID.fromInt( map[posY][posX-1] );
+	public int leftMove(int[][] map ,int id) {
+		int tmpX = 0;
+		int tmpY = 0;
+		if ( id== GameObjectID.PLAYER1.ID) {
+			tmpX=posX;
+			tmpY=posY;
+		}
+		else if ( id==GameObjectID.PLAYER2.ID) {
+			tmpX=pos2X;
+			tmpY=pos2Y;
+		}
+		collisionID = GameObjectID.fromInt( map[tmpY][tmpX-1] );
 		switch( collisionID ) {
 		// some apply on duff's device
 		case EMPTY: case TARGET: case TARGET2: case TARGET3:
-			posX--; moveCount++;
+			tmpX--; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
-			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX-2] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY][tmpX-2] );
 			audio.tickPlayAtOnce();
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET) {
 				audio.tickPlayAtOnce();
-				posX--; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL.ID;
-				map[posY][posX-1]+=GameObjectID.BALL.ID;
+				tmpX--; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL.ID;
+				map[tmpY][tmpX-1]+=GameObjectID.BALL.ID;
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET) 
@@ -89,12 +119,12 @@ public class PlayerMove {
 			}
 			break;
 		case BALL2: case FILLEDTARGET2:
-			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX-2] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY][tmpX-2] );
 			audio.tickPlayAtOnce();
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
-				posX--; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL2.ID;
-				map[posY][posX-1]+=GameObjectID.BALL2.ID;
+				tmpX--; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL2.ID;
+				map[tmpY][tmpX-1]+=GameObjectID.BALL2.ID;
 				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET2) 
@@ -102,12 +132,12 @@ public class PlayerMove {
 			}
 			break;
 		case BALL3: case FILLEDTARGET3:
-			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX-2] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY][tmpX-2] );
 			audio.tickPlayAtOnce();
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
-				posX--; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL3.ID;
-				map[posY][posX-1]+=GameObjectID.BALL3.ID;
+				tmpX--; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL3.ID;
+				map[tmpY][tmpX-1]+=GameObjectID.BALL3.ID;
 				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET3) 
@@ -115,7 +145,7 @@ public class PlayerMove {
 			}
 			break;
 		case TELEPORTIN:
-			moveToTeleport();
+			moveToTeleport(id);
 			break;
 		case TELEPORTOUT:
 			// don't do it
@@ -123,28 +153,43 @@ public class PlayerMove {
 		case WALL:
 			// don't do it
 			break;
-		case UPLADDER:
-			
-			break;
 		default:
 			break;
-			
+		}
+		if ( id==GameObjectID.PLAYER1.ID) {
+			posX=tmpX;
+			posY=tmpY;
+		}
+		else if ( id==GameObjectID.PLAYER2.ID) {
+			pos2X=tmpX;
+			pos2Y=tmpY;
 		}
 		return collisionID.ID;
 	}
-	public int rightMove(int[][] map ) {
-		collisionID = GameObjectID.fromInt( map[posY][posX+1] );
+	public int rightMove(int[][] map, int id ) {
+		int tmpX = 0;
+		int tmpY = 0;
+		if ( id== GameObjectID.PLAYER1.ID) {
+			tmpX=posX;
+			tmpY=posY;
+		}
+	
+		else if ( id== GameObjectID.PLAYER2.ID) {
+			tmpX=pos2X;
+			tmpY=pos2Y;
+		}
+		collisionID = GameObjectID.fromInt( map[tmpY][tmpX+1] );
 		switch( collisionID ) {
 		case EMPTY: case TARGET: case TARGET2: case TARGET3:
-			posX++; moveCount++;
+			tmpX++; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
-			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX+2] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY][tmpX+2] );
 			audio.tickPlayAtOnce();
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET) {
-				posX++; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL.ID;
-				map[posY][posX+1]+=GameObjectID.BALL.ID;
+				tmpX++; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL.ID;
+				map[tmpY][tmpX+1]+=GameObjectID.BALL.ID;
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET) 
@@ -153,11 +198,11 @@ public class PlayerMove {
 			break;
 		case BALL2: case FILLEDTARGET2:
 			audio.tickPlayAtOnce();
-			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX+2] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY][tmpX+2] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
-				posX++; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL2.ID;
-				map[posY][posX+1]+=GameObjectID.BALL2.ID;
+				tmpX++; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL2.ID;
+				map[tmpY][tmpX+1]+=GameObjectID.BALL2.ID;
 				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET2) 
@@ -166,11 +211,11 @@ public class PlayerMove {
 			break;
 		case BALL3: case FILLEDTARGET3:
 			audio.tickPlayAtOnce();
-			collisionWithBallID =  GameObjectID.fromInt( map[posY][posX+2] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY][tmpX+2] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
-				posX++; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL3.ID;
-				map[posY][posX+1]+=GameObjectID.BALL3.ID;
+				tmpX++; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL3.ID;
+				map[tmpY][tmpX+1]+=GameObjectID.BALL3.ID;
 				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET3) 
@@ -178,7 +223,7 @@ public class PlayerMove {
 			}
 			break;
 		case TELEPORTIN:
-			moveToTeleport();
+			moveToTeleport(id);
 			break;
 		case TELEPORTOUT:
 			// do nothing
@@ -190,21 +235,40 @@ public class PlayerMove {
 			break;
 			
 		}
+		if ( id==GameObjectID.PLAYER1.ID) {
+			posX=tmpX;
+			posY=tmpY;
+		}
+		else if ( id==GameObjectID.PLAYER2.ID) {
+			pos2X=tmpX;
+			pos2Y=tmpY;
+		}
 		return collisionID.ID;
 	}
-	public int upMove(int[][] map ) {
-		collisionID = GameObjectID.fromInt( map[posY-1][posX] );
+	public int upMove(int[][] map, int id ) {
+		int tmpX = 0;
+		int tmpY = 0;
+		if ( id== GameObjectID.PLAYER1.ID) {
+			tmpX=posX;
+			tmpY=posY;
+		}
+	
+		else if ( id== GameObjectID.PLAYER2.ID) {
+			tmpX=pos2X;
+			tmpY=pos2Y;
+		}
+		collisionID = GameObjectID.fromInt( map[tmpY-1][tmpX] );
 		switch( collisionID ) {
 		case EMPTY: case TARGET: case TARGET2: case TARGET3:
-			posY--; moveCount++;
+			tmpY--; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
 			audio.tickPlayAtOnce();
-			collisionWithBallID =  GameObjectID.fromInt( map[posY-2][posX] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY-2][tmpX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET) {
-				posY--; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL.ID;
-				map[posY-1][posX]+=GameObjectID.BALL.ID;
+				tmpY--; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL.ID;
+				map[tmpY-1][tmpX]+=GameObjectID.BALL.ID;
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET) 
@@ -213,11 +277,11 @@ public class PlayerMove {
 			break;
 		case BALL2: case FILLEDTARGET2:
 			audio.tickPlayAtOnce();
-			collisionWithBallID =  GameObjectID.fromInt( map[posY-2][posX] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY-2][tmpX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
-				posY--; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL2.ID;
-				map[posY-1][posY]+=GameObjectID.BALL2.ID;
+				tmpY--; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL2.ID;
+				map[tmpY-1][tmpX]+=GameObjectID.BALL2.ID;
 				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET2) 
@@ -226,11 +290,11 @@ public class PlayerMove {
 			break;
 		case BALL3: case FILLEDTARGET3:
 			audio.tickPlayAtOnce();
-			collisionWithBallID =  GameObjectID.fromInt( map[posY-2][posX] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY-2][tmpX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
-				posY--; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL3.ID;
-				map[posY-1][posY]+=GameObjectID.BALL3.ID;
+				tmpY--; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL3.ID;
+				map[tmpY-1][tmpX]+=GameObjectID.BALL3.ID;
 				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET3) 
@@ -238,7 +302,7 @@ public class PlayerMove {
 			}
 			break;
 		case TELEPORTIN:
-			moveToTeleport();
+			moveToTeleport(id);
 			break;
 		case TELEPORTOUT:
 			// don't do it
@@ -250,21 +314,40 @@ public class PlayerMove {
 			break;
 			
 		}
+		if ( id==GameObjectID.PLAYER1.ID) {
+			posX=tmpX;
+			posY=tmpY;
+		}
+		else if ( id==GameObjectID.PLAYER2.ID) {
+			pos2X=tmpX;
+			pos2Y=tmpY;
+		}
 		return collisionID.ID;
 	}
-	public int downMove(int[][] map ) {
-		collisionID = GameObjectID.fromInt( map[posY+1][posX] );
+	public int downMove(int[][] map,int id ) {
+		int tmpX = 0;
+		int tmpY = 0;
+		if ( id== GameObjectID.PLAYER1.ID) {
+			tmpX=posX;
+			tmpY=posY;
+		}
+	
+		else if ( id== GameObjectID.PLAYER2.ID) {
+			tmpX=pos2X;
+			tmpY=pos2Y;
+		}
+		collisionID = GameObjectID.fromInt( map[tmpY+1][tmpX] );
 		switch( collisionID ) {
 		case EMPTY: case TARGET: case TARGET2: case TARGET3:
-			posY++; moveCount++;
+			tmpY++; moveCount++;
 			break;
 		case BALL: case FILLEDTARGET:
 			audio.tickPlayAtOnce();
-			collisionWithBallID =  GameObjectID.fromInt( map[posY+2][posX] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY+2][tmpX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET) {
-				posY++; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL.ID;
-				map[posY+1][posX]+=GameObjectID.BALL.ID;
+				tmpY++; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL.ID;
+				map[tmpY+1][tmpX]+=GameObjectID.BALL.ID;
 				if (collisionWithBallID == GameObjectID.TARGET && collisionID == GameObjectID.BALL) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET) 
@@ -273,11 +356,11 @@ public class PlayerMove {
 			break;
 		case BALL2: case FILLEDTARGET2:
 			audio.tickPlayAtOnce();
-			collisionWithBallID =  GameObjectID.fromInt( map[posY+2][posX] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY+2][tmpX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET2) {
-				posY++; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL2.ID;
-				map[posY+1][posX]+=GameObjectID.BALL2.ID;
+				tmpY++; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL2.ID;
+				map[tmpY+1][tmpX]+=GameObjectID.BALL2.ID;
 				if (collisionWithBallID == GameObjectID.TARGET2 && collisionID == GameObjectID.BALL2) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET2) 
@@ -286,11 +369,11 @@ public class PlayerMove {
 			break;
 		case BALL3: case FILLEDTARGET3:
 			audio.tickPlayAtOnce();
-			collisionWithBallID =  GameObjectID.fromInt( map[posY+2][posX] );
+			collisionWithBallID =  GameObjectID.fromInt( map[tmpY+2][tmpX] );
 			if ( collisionWithBallID == GameObjectID.EMPTY || collisionWithBallID == GameObjectID.TARGET3) {
-				posY++; moveCount++;
-				map[posY][posX]-=GameObjectID.BALL3.ID;
-				map[posY+1][posX]+=GameObjectID.BALL3.ID;
+				tmpY++; moveCount++;
+				map[tmpY][tmpX]-=GameObjectID.BALL3.ID;
+				map[tmpY+1][tmpX]+=GameObjectID.BALL3.ID;
 				if (collisionWithBallID == GameObjectID.TARGET3 && collisionID == GameObjectID.BALL3) 
 					targetCount++;	
 				else if (collisionWithBallID == GameObjectID.EMPTY && collisionID == GameObjectID.FILLEDTARGET3) 
@@ -298,7 +381,7 @@ public class PlayerMove {
 			}
 			break;
 		case TELEPORTIN:
-			moveToTeleport();
+			moveToTeleport(id);
 			break;
 		case TELEPORTOUT:
 			// don't do it
@@ -309,6 +392,14 @@ public class PlayerMove {
 		default:
 			break;
 			
+		}
+		if ( id==GameObjectID.PLAYER1.ID) {
+			posX=tmpX;
+			posY=tmpY;
+		}
+		else if ( id==GameObjectID.PLAYER2.ID) {
+			pos2X=tmpX;
+			pos2Y=tmpY;
 		}
 		return collisionID.ID;
 	}
@@ -327,6 +418,5 @@ public class PlayerMove {
 			
 		}
 		return 0;
-	}
-	
+	}	
 }
